@@ -4,9 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes" />
     <title>Reloj Club Morphy</title>
+    <meta name="theme-color" content="#4A8CFF">
+    <link rel="manifest" href="/manifest.json">
     <style>
         /* ============================================================
-           CSS COMPLETO (con estilos para modal manual y botón engrane)
+           CSS COMPLETO (igual que antes, sin cambios)
            ============================================================ */
         * {
             margin: 0;
@@ -363,8 +365,6 @@
             border-radius: 12px;
             transition: width 0.3s linear, background 0.5s;
         }
-
-        /* Controles de ajuste (paso fijo + manual) */
         .adjust-controls {
             display: none;
             gap: 6px;
@@ -404,8 +404,6 @@
         .clock.paused .adjust-controls {
             display: flex;
         }
-
-        /* Modal de ajuste manual */
         .manual-modal {
             display: none;
             position: fixed;
@@ -501,7 +499,6 @@
         .manual-modal-content .modal-actions .btn-cancel-modal:hover {
             background: var(--border);
         }
-
         .controls {
             display: flex;
             flex-wrap: wrap;
@@ -558,7 +555,6 @@
             background: transparent;
             border: 2px solid var(--border);
         }
-
         .config-panel {
             position: fixed;
             bottom: 0;
@@ -1081,12 +1077,10 @@
                 </div>
                 <span class="move-counter" id="moves-white">Mov 0</span>
                 <span class="turn-counter" id="turn-counter-white">Turno 0s</span>
-                <!-- Controles de ajuste -->
                 <div class="adjust-controls" id="adjust-white">
                     <button class="adjust-btn" data-player="white" data-delta="-1" title="Restar tiempo">−</button>
                     <span style="font-size:0.7rem; color:var(--text-soft);">Ajustar</span>
                     <button class="adjust-btn" data-player="white" data-delta="1" title="Añadir tiempo">+</button>
-                    <!-- NUEVO: botón engrane para ajuste manual -->
                     <button class="manual-adjust-btn" data-player="white" title="Ajuste manual (horas, minutos, segundos)">⚙️</button>
                 </div>
             </div>
@@ -1173,9 +1167,13 @@
                 </div>
             </div>
 
-            <div class="config" style="margin-bottom:12px;">
+            <!-- NUEVO: Opciones adicionales con checkbox de estadísticas -->
+            <div class="config" style="margin-bottom:12px; display: flex; flex-wrap: wrap; gap: 10px;">
                 <label style="font-size:0.7rem; color:var(--text-soft); display:flex; align-items:center; gap:6px;">
                     <input type="checkbox" id="auto-pause" checked /> Pausar al perder foco
+                </label>
+                <label style="font-size:0.7rem; color:var(--text-soft); display:flex; align-items:center; gap:6px;">
+                    <input type="checkbox" id="show-stats" checked /> Mostrar estadísticas al finalizar
                 </label>
             </div>
 
@@ -1220,7 +1218,7 @@
             </div>
         </div>
 
-        <!-- NUEVO: Modal de ajuste manual -->
+        <!-- Modal manual -->
         <div class="manual-modal" id="manual-modal">
             <div class="manual-modal-content">
                 <h3 id="manual-modal-title">Ajustar tiempo de Blancas</h3>
@@ -1245,6 +1243,7 @@
             </div>
         </div>
 
+        <!-- Overlay de celebración -->
         <div class="celebration-overlay" id="celebration-overlay">
             <div class="celebration-content">
                 <div class="winner-text">
@@ -1325,13 +1324,13 @@
             const statAvgBlack = document.getElementById('stat-avg-black');
             const statWinner = document.getElementById('stat-winner');
             const autoPauseCheck = document.getElementById('auto-pause');
+            const showStatsCheck = document.getElementById('show-stats');
             const celebrationStatsBtn = document.getElementById('celebration-stats-btn');
             const statsModal = document.getElementById('stats-modal');
             const statsDetail = document.getElementById('stats-detail');
             const statsModalClose = document.getElementById('stats-modal-close');
             const adjustStepSelect = document.getElementById('adjustStep');
             const adjustBtns = document.querySelectorAll('.adjust-btn');
-            // NUEVO: elementos del modal manual
             const manualModal = document.getElementById('manual-modal');
             const manualHours = document.getElementById('manual-hours');
             const manualMinutes = document.getElementById('manual-minutes');
@@ -1376,8 +1375,9 @@
                 lastFrameTime: 0,
                 timeAccumulator: 0,
                 adjustStep: 300,
-                // NUEVO: jugador seleccionado para ajuste manual
                 manualTarget: null,
+                // NUEVO: estado para mostrar estadísticas
+                showStats: true,
             };
 
             // ---------- Persistencia ----------
@@ -1415,6 +1415,11 @@
                         if (settings.autoPause !== undefined) {
                             state.autoPause = settings.autoPause;
                             autoPauseCheck.checked = state.autoPause;
+                        }
+                        // NUEVO: cargar estado de mostrar estadísticas
+                        if (settings.showStats !== undefined) {
+                            state.showStats = settings.showStats;
+                            showStatsCheck.checked = state.showStats;
                         }
                         if (settings.adjustStep) {
                             adjustStepSelect.value = settings.adjustStep;
@@ -1476,6 +1481,7 @@
                         clockName: state.clockName,
                         autoStart: state.autoStart,
                         autoPause: state.autoPause,
+                        showStats: state.showStats,
                         adjustStep: adjustStepSelect.value,
                     };
                     localStorage.setItem('chessClockSettings', JSON.stringify(settings));
@@ -1737,7 +1743,7 @@
                 playBeep(600, 100, 1);
             }
 
-            // ---------- NUEVO: Ajuste manual ----------
+            // ---------- Ajuste manual ----------
             function openManualModal(player) {
                 if (!state.isPaused || !state.isRunning || state.gameOver) {
                     announce('La partida debe estar pausada para ajustar manualmente');
@@ -1865,7 +1871,7 @@
                 state.animFrameId = requestAnimationFrame(tickLoop);
             }
 
-            // ---------- Fin de partida ----------
+            // ---------- Fin de partida (MODIFICADO) ----------
             function endGame(loser) {
                 if (state.gameOver) return;
                 state.gameOver = true;
@@ -1887,7 +1893,19 @@
                 updateStats();
                 releaseWakeLock();
                 clearSavedGame();
-                showCelebration(winnerName);
+
+                // --- NUEVA LÓGICA: Mostrar estadísticas o reiniciar automáticamente ---
+                if (state.showStats) {
+                    // Mostrar overlay de celebración
+                    showCelebration(winnerName);
+                } else {
+                    // Reiniciar automáticamente sin mostrar nada
+                    // Pequeño retraso para ver el 00:00 y la bandera
+                    setTimeout(() => {
+                        resetGame();
+                    }, 400);
+                }
+
                 updateAdjustVisibility();
 
                 if (state.startTime) {
@@ -2035,7 +2053,6 @@
                 updateDisplay();
                 saveGame();
                 updateAdjustVisibility();
-                // Cerrar modal manual si estaba abierto
                 closeManualModal();
             }
 
@@ -2402,7 +2419,7 @@
                     });
                 });
 
-                // NUEVO: eventos de ajuste manual (engrane)
+                // Eventos de ajuste manual (engrane)
                 manualAdjustBtns.forEach(btn => {
                     btn.addEventListener('click', function(e) {
                         e.stopPropagation();
@@ -2411,19 +2428,24 @@
                     });
                 });
 
-                // Modal manual: aplicar y cancelar
+                // Modal manual
                 manualApply.addEventListener('click', applyManualAdjust);
                 manualCancel.addEventListener('click', closeManualModal);
-                // Cerrar al hacer clic fuera
                 manualModal.addEventListener('click', function(e) {
                     if (e.target === this) closeManualModal();
                 });
-                // Enter en los inputs para aplicar
                 [manualHours, manualMinutes, manualSeconds].forEach(input => {
                     input.addEventListener('keydown', function(e) {
                         if (e.key === 'Enter') applyManualAdjust();
                         if (e.key === 'Escape') closeManualModal();
                     });
+                });
+
+                // NUEVO: Evento del checkbox de estadísticas
+                showStatsCheck.addEventListener('change', function() {
+                    state.showStats = this.checked;
+                    saveSettings();
+                    announce(state.showStats ? 'Estadísticas activadas' : 'Estadísticas desactivadas');
                 });
 
                 // Eventos existentes
@@ -2474,6 +2496,13 @@
                 });
 
                 document.addEventListener('visibilitychange', handleVisibilityChange);
+
+                // Registro del Service Worker para PWA
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(() => console.log('Service Worker registrado'))
+                        .catch(err => console.log('Error al registrar SW:', err));
+                }
 
                 updateDisplay();
                 updateControls();
