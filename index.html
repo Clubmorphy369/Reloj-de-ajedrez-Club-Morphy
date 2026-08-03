@@ -8,7 +8,7 @@
     <link rel="manifest" href="/manifest.json">
     <style>
         /* ============================================================
-           CSS COMPLETO (igual que antes, sin cambios)
+           CSS COMPLETO
            ============================================================ */
         * {
             margin: 0;
@@ -1733,9 +1733,12 @@
                 clockWhite.setAttribute('aria-valuenow', Math.floor(state.whiteTime / 10));
                 clockBlack.setAttribute('aria-valuenow', Math.floor(state.blackTime / 10));
 
+                // Barra de progreso (corregida para Reloj de Arena)
                 let maxDec;
                 if (state.mode === 'movetimer') {
                     maxDec = state.moveTime * 10;
+                } else if (state.mode === 'hourglass') {
+                    maxDec = state.maxTime;
                 } else {
                     maxDec = state.baseTime * 60 * 10;
                 }
@@ -2205,11 +2208,11 @@
                 state.timeAccumulator = 0;
                 state.whiteDelay = 0;
                 state.blackDelay = 0;
-                state.maxTime = 0;
                 state.whiteByoyomiLeft = 0;
                 state.blackByoyomiLeft = 0;
                 state.whiteByoyomiTimer = 0;
                 state.blackByoyomiTimer = 0;
+
                 let initial;
                 if (state.mode === 'movetimer') {
                     initial = (parseInt(moveTimeInput.value) || 30) * 10;
@@ -2218,9 +2221,11 @@
                 }
                 state.whiteTime = initial;
                 state.blackTime = initial;
+                state.maxTime = initial;
                 state.whiteMoves = 0;
                 state.blackMoves = 0;
                 state.moveRemaining = 0;
+
                 clockWhite.classList.remove('active', 'winner', 'flagged', 'warning', 'inactive', 'paused');
                 clockBlack.classList.remove('active', 'winner', 'flagged', 'warning', 'inactive', 'paused');
                 timeWhite.classList.remove('warning', 'flagged');
@@ -2282,7 +2287,6 @@
                 state.turnElapsed = 0;
                 state.timeAccumulator = 0;
 
-                // Gestionar delay y Byoyomi al cambiar de turno
                 if (state.mode === 'delay') {
                     const next = state.activePlayer;
                     state[next + 'Delay'] = state.delayTime * 10;
