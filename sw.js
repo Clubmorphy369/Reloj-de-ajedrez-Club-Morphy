@@ -1,4 +1,4 @@
-const CACHE_NAME = 'club-morphy-v2';  // Cambia a v2 para forzar actualización
+const CACHE_NAME = 'club-morphy-v2';
 const urlsToCache = [
   '/index.html',
   '/manifest.json'
