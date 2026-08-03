@@ -1,4 +1,4 @@
-const CACHE_NAME = 'club-morphy-v1';
+const CACHE_NAME = 'club-morphy-v2';  // Cambiado a v2
 const urlsToCache = [
   '/index.html',
   '/manifest.json'
