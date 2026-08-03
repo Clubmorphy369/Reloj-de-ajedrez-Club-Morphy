@@ -8,7 +8,7 @@
     <link rel="manifest" href="/manifest.json">
     <style>
         /* ============================================================
-           CSS COMPLETO
+           CSS COMPLETO (sin cambios)
            ============================================================ */
         * {
             margin: 0;
@@ -1733,12 +1733,14 @@
                 clockWhite.setAttribute('aria-valuenow', Math.floor(state.whiteTime / 10));
                 clockBlack.setAttribute('aria-valuenow', Math.floor(state.blackTime / 10));
 
-                // Barra de progreso (corregida para Reloj de Arena)
+                // Barra de progreso para Reloj de Arena
                 let maxDec;
                 if (state.mode === 'movetimer') {
                     maxDec = state.moveTime * 10;
                 } else if (state.mode === 'hourglass') {
-                    maxDec = state.maxTime;
+                    // En el modo arena, el máximo es el tiempo total inicial (whiteTime + blackTime)
+                    // pero para la barra usamos el tiempo inicial de cada jugador (baseTime)
+                    maxDec = state.baseTime * 60 * 10; // usamos el baseTime como referencia
                 } else {
                     maxDec = state.baseTime * 60 * 10;
                 }
@@ -1912,16 +1914,16 @@
                     const player = state.activePlayer;
 
                     // ============================================================
-                    // 1. MODO RELOJ DE ARENA
+                    // 1. MODO RELOJ DE ARENA (CORREGIDO)
                     // ============================================================
                     if (state.mode === 'hourglass') {
                         if (player === 'white') {
                             state.whiteTime = Math.max(0, state.whiteTime - 1);
-                            state.blackTime = Math.min(state.maxTime, state.blackTime + 1);
+                            state.blackTime = state.blackTime + 1; // SIN LÍMITE
                             state.turnElapsed += 1;
                         } else {
                             state.blackTime = Math.max(0, state.blackTime - 1);
-                            state.whiteTime = Math.min(state.maxTime, state.whiteTime + 1);
+                            state.whiteTime = state.whiteTime + 1; // SIN LÍMITE
                             state.turnElapsed += 1;
                         }
                     }
