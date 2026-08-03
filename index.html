@@ -687,6 +687,12 @@
             opacity: 0.4;
             cursor: not-allowed;
         }
+        .config-panel .config-group#byoyomi-group {
+            display: none;
+        }
+        .config-panel .config-group#byoyomi-group input {
+            width: 50px;
+        }
         .config-panel .theme-selector {
             display: flex;
             gap: 8px;
@@ -1140,6 +1146,9 @@
                         <option value="standard">Estándar (Finis)</option>
                         <option value="increment">Incremento (Fischer)</option>
                         <option value="bronstein">Bronstein</option>
+                        <option value="delay">Retraso Simple (US)</option>
+                        <option value="hourglass">Reloj de Arena</option>
+                        <option value="byoyomi">Byoyomi (Shogi)</option>
                         <option value="movetimer">Tiempo por Mov.</option>
                     </select>
                 </div>
@@ -1148,8 +1157,14 @@
                     <input type="number" id="baseTime" value="5" min="0.5" step="0.5" />
                 </div>
                 <div class="config-group" id="increment-group" style="display:none;">
-                    <label for="increment">Incremento (seg)</label>
+                    <label for="increment" id="increment-label">Incremento (seg)</label>
                     <input type="number" id="increment" value="3" min="0" step="1" />
+                </div>
+                <div class="config-group" id="byoyomi-group" style="display:none;">
+                    <label for="byoyomiPeriods">Períodos</label>
+                    <input type="number" id="byoyomiPeriods" value="3" min="1" step="1" />
+                    <label for="byoyomiTime">Seg/Período</label>
+                    <input type="number" id="byoyomiTime" value="30" min="1" step="1" />
                 </div>
                 <div class="config-group" id="move-time-group" style="display:none;">
                     <label for="moveTime">Segundos por movimiento</label>
@@ -1167,7 +1182,6 @@
                 </div>
             </div>
 
-            <!-- NUEVO: Opciones adicionales con checkbox de estadísticas -->
             <div class="config" style="margin-bottom:12px; display: flex; flex-wrap: wrap; gap: 10px;">
                 <label style="font-size:0.7rem; color:var(--text-soft); display:flex; align-items:center; gap:6px;">
                     <input type="checkbox" id="auto-pause" checked /> Pausar al perder foco
@@ -1196,6 +1210,9 @@
                         <option value="standard">Estándar</option>
                         <option value="increment">Incremento</option>
                         <option value="bronstein">Bronstein</option>
+                        <option value="delay">Retraso Simple</option>
+                        <option value="hourglass">Reloj de Arena</option>
+                        <option value="byoyomi">Byoyomi</option>
                         <option value="movetimer">Tiempo por Mov.</option>
                     </select>
                 </div>
@@ -1204,7 +1221,7 @@
                     <input type="number" id="preset-base" value="5" min="0.5" step="0.5" />
                 </div>
                 <div class="form-group">
-                    <label for="preset-inc">Incremento (seg) / Tiempo por Mov.</label>
+                    <label for="preset-inc">Incremento / Retraso / Seg x Período</label>
                     <input type="number" id="preset-inc" value="3" min="0" step="1" />
                 </div>
                 <div class="modal-actions">
@@ -1293,6 +1310,9 @@
             const incrementGroup = document.getElementById('increment-group');
             const moveTimeGroup = document.getElementById('move-time-group');
             const baseTimeGroup = document.getElementById('base-time-group');
+            const byoyomiGroup = document.getElementById('byoyomi-group');
+            const byoyomiPeriodsInput = document.getElementById('byoyomiPeriods');
+            const byoyomiTimeInput = document.getElementById('byoyomiTime');
             const modeBadge = document.getElementById('mode-badge');
             const btnThemeMode = document.getElementById('btn-theme-mode');
             const btnThemeModePanel = document.getElementById('btn-theme-mode-panel');
@@ -1376,8 +1396,18 @@
                 timeAccumulator: 0,
                 adjustStep: 300,
                 manualTarget: null,
-                // NUEVO: estado para mostrar estadísticas
                 showStats: true,
+                // Nuevas variables para modos adicionales
+                delayTime: 0,
+                whiteDelay: 0,
+                blackDelay: 0,
+                maxTime: 0,
+                byoyomiPeriods: 3,
+                byoyomiTime: 30,
+                whiteByoyomiLeft: 0,
+                blackByoyomiLeft: 0,
+                whiteByoyomiTimer: 0,
+                blackByoyomiTimer: 0,
             };
 
             // ---------- Persistencia ----------
@@ -1416,7 +1446,6 @@
                             state.autoPause = settings.autoPause;
                             autoPauseCheck.checked = state.autoPause;
                         }
-                        // NUEVO: cargar estado de mostrar estadísticas
                         if (settings.showStats !== undefined) {
                             state.showStats = settings.showStats;
                             showStatsCheck.checked = state.showStats;
@@ -1425,6 +1454,8 @@
                             adjustStepSelect.value = settings.adjustStep;
                             state.adjustStep = parseInt(settings.adjustStep) * 10;
                         }
+                        if (settings.byoyomiPeriods) byoyomiPeriodsInput.value = settings.byoyomiPeriods;
+                        if (settings.byoyomiTime) byoyomiTimeInput.value = settings.byoyomiTime;
                     }
                     const savedPresets = localStorage.getItem('chessClockCustomPresets');
                     if (savedPresets) {
@@ -1457,6 +1488,15 @@
                         baseTimeInput.value = state.baseTime;
                         incrementInput.value = state.increment;
                         moveTimeInput.value = state.moveTime;
+                        state.byoyomiPeriods = game.byoyomiPeriods || 3;
+                        state.byoyomiTime = game.byoyomiTime || 30;
+                        state.whiteByoyomiLeft = game.whiteByoyomiLeft || 0;
+                        state.blackByoyomiLeft = game.blackByoyomiLeft || 0;
+                        state.whiteByoyomiTimer = game.whiteByoyomiTimer || 0;
+                        state.blackByoyomiTimer = game.blackByoyomiTimer || 0;
+                        state.whiteDelay = game.whiteDelay || 0;
+                        state.blackDelay = game.blackDelay || 0;
+                        state.maxTime = game.maxTime || 0;
                         if (state.isRunning && !state.isPaused && !state.gameOver) {
                             startTimerLoop();
                         }
@@ -1483,6 +1523,8 @@
                         autoPause: state.autoPause,
                         showStats: state.showStats,
                         adjustStep: adjustStepSelect.value,
+                        byoyomiPeriods: byoyomiPeriodsInput.value,
+                        byoyomiTime: byoyomiTimeInput.value,
                     };
                     localStorage.setItem('chessClockSettings', JSON.stringify(settings));
                 } catch (_) {}
@@ -1508,6 +1550,15 @@
                         baseTime: state.baseTime,
                         increment: state.increment,
                         moveTime: state.moveTime,
+                        byoyomiPeriods: state.byoyomiPeriods,
+                        byoyomiTime: state.byoyomiTime,
+                        whiteByoyomiLeft: state.whiteByoyomiLeft,
+                        blackByoyomiLeft: state.blackByoyomiLeft,
+                        whiteByoyomiTimer: state.whiteByoyomiTimer,
+                        blackByoyomiTimer: state.blackByoyomiTimer,
+                        whiteDelay: state.whiteDelay,
+                        blackDelay: state.blackDelay,
+                        maxTime: state.maxTime,
                     };
                     localStorage.setItem('chessClockGame', JSON.stringify(game));
                 } catch (_) {}
@@ -1637,8 +1688,20 @@
                 movesWhite.textContent = `Mov ${state.whiteMoves}`;
                 movesBlack.textContent = `Mov ${state.blackMoves}`;
 
-                turnCounterWhite.textContent = `Turno ${Math.floor(state.turnElapsed / 10)}s`;
-                turnCounterBlack.textContent = `Turno ${Math.floor(state.turnElapsed / 10)}s`;
+                let turnTextWhite = `Turno ${Math.floor(state.turnElapsed / 10)}s`;
+                let turnTextBlack = `Turno ${Math.floor(state.turnElapsed / 10)}s`;
+                if (state.mode === 'delay') {
+                    const dW = state.whiteDelay > 0 ? ` Ret:${(state.whiteDelay/10).toFixed(1)}s` : '';
+                    const dB = state.blackDelay > 0 ? ` Ret:${(state.blackDelay/10).toFixed(1)}s` : '';
+                    turnTextWhite += dW;
+                    turnTextBlack += dB;
+                }
+                if (state.mode === 'byoyomi') {
+                    if (state.whiteTime <= 0) turnTextWhite += ` ⏳${state.whiteByoyomiLeft}`;
+                    if (state.blackTime <= 0) turnTextBlack += ` ⏳${state.blackByoyomiLeft}`;
+                }
+                turnCounterWhite.textContent = turnTextWhite;
+                turnCounterBlack.textContent = turnTextBlack;
 
                 const warn = 30,
                     warnDec = warn * 10;
@@ -1683,7 +1746,9 @@
                 progressWhite.style.background = getProgressColor(pctWhite / 100);
                 progressBlack.style.background = getProgressColor(pctBlack / 100);
 
-                const labels = { standard: 'Estándar', increment: 'Incremento', bronstein: 'Bronstein', movetimer: 'Tiempo por Mov.' };
+                const labels = { standard: 'Estándar', increment: 'Incremento', bronstein: 'Bronstein',
+                    delay: 'Retraso Simple', hourglass: 'Reloj Arena', byoyomi: 'Byoyomi',
+                movetimer: 'Tiempo por Mov.' };
                 modeBadge.textContent = labels[state.mode] || 'Estándar';
             }
 
@@ -1842,19 +1907,96 @@
                     state.timeAccumulator -= 0.1;
 
                     const player = state.activePlayer;
-                    if (player === 'white') {
-                        state.whiteTime = Math.max(0, state.whiteTime - 1);
-                        state.turnElapsed += 1;
-                    } else {
-                        state.blackTime = Math.max(0, state.blackTime - 1);
+
+                    // ============================================================
+                    // 1. MODO RELOJ DE ARENA
+                    // ============================================================
+                    if (state.mode === 'hourglass') {
+                        if (player === 'white') {
+                            state.whiteTime = Math.max(0, state.whiteTime - 1);
+                            state.blackTime = Math.min(state.maxTime, state.blackTime + 1);
+                            state.turnElapsed += 1;
+                        } else {
+                            state.blackTime = Math.max(0, state.blackTime - 1);
+                            state.whiteTime = Math.min(state.maxTime, state.whiteTime + 1);
+                            state.turnElapsed += 1;
+                        }
+                    }
+                    // ============================================================
+                    // 2. MODO BYOYOMI (CON PITIDOS DE CUENTA ATRÁS)
+                    // ============================================================
+                    else if (state.mode === 'byoyomi') {
+                        const timerKey = player + 'ByoyomiTimer';
+                        const leftKey = player + 'ByoyomiLeft';
+                        const timeKey = player + 'Time';
+
+                        if (state[timeKey] > 0) {
+                            state[timeKey] = Math.max(0, state[timeKey] - 1);
+                            state.turnElapsed += 1;
+                        } else {
+                            // Estamos en Byoyomi
+                            if (state[timerKey] > 0) {
+                                state[timerKey] -= 1;
+                                state.turnElapsed += 1;
+
+                                // === PITIDOS DE CUENTA ATRÁS (últimos 5 segundos) ===
+                                if (state[timerKey] <= 50 && state[timerKey] > 0 && state[timerKey] % 10 === 0) {
+                                    playBeep(1200, 80, 1);
+                                }
+                                if (state[timerKey] === 10) {
+                                    playBeep(1500, 200, 1);
+                                }
+
+                            } else {
+                                // Se acabó el período actual
+                                if (state[leftKey] > 0) {
+                                    state[leftKey] -= 1;
+                                    state[timerKey] = state.byoyomiTime * 10;
+                                    playBeep(600, 200, 2);
+                                    announce(`${player === 'white' ? 'Blancas' : 'Negras'}: ${state[leftKey]} períodos restantes`);
+                                } else {
+                                    endGame(player);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                    // ============================================================
+                    // 3. MODO RETRASO SIMPLE (US DELAY)
+                    // ============================================================
+                    else if (state.mode === 'delay') {
+                        const delayKey = player + 'Delay';
+                        if (state[delayKey] > 0) {
+                            state[delayKey] -= 1;
+                            state.turnElapsed += 1;
+                        } else {
+                            if (player === 'white') {
+                                state.whiteTime = Math.max(0, state.whiteTime - 1);
+                            } else {
+                                state.blackTime = Math.max(0, state.blackTime - 1);
+                            }
+                            state.turnElapsed += 1;
+                        }
+                    }
+                    // ============================================================
+                    // 4. MODOS ESTÁNDAR / INCREMENTO / BRONSTEIN / MOVETIMER
+                    // ============================================================
+                    else {
+                        if (player === 'white') {
+                            state.whiteTime = Math.max(0, state.whiteTime - 1);
+                        } else {
+                            state.blackTime = Math.max(0, state.blackTime - 1);
+                        }
                         state.turnElapsed += 1;
                     }
 
+                    // Verificar si alguien perdió por tiempo
                     if (state.whiteTime <= 0 || state.blackTime <= 0) {
                         endGame(state.whiteTime <= 0 ? 'white' : 'black');
                         return;
                     }
 
+                    // Alerta de 10 segundos
                     const remaining = (player === 'white') ? state.whiteTime : state.blackTime;
                     if (remaining === 100) {
                         soundWarning();
@@ -1871,7 +2013,7 @@
                 state.animFrameId = requestAnimationFrame(tickLoop);
             }
 
-            // ---------- Fin de partida (MODIFICADO) ----------
+            // ---------- Fin de partida ----------
             function endGame(loser) {
                 if (state.gameOver) return;
                 state.gameOver = true;
@@ -1894,29 +2036,12 @@
                 releaseWakeLock();
                 clearSavedGame();
 
-                // --- NUEVA LÓGICA: Mostrar estadísticas o reiniciar automáticamente ---
                 if (state.showStats) {
-                    // Mostrar overlay de celebración
                     showCelebration(winnerName);
                 } else {
-                    // Reiniciar automáticamente sin mostrar nada
-                    // Pequeño retraso para ver el 00:00 y la bandera
-                    setTimeout(() => {
-                        resetGame();
-                    }, 400);
+                    setTimeout(() => { resetGame(); }, 400);
                 }
-
                 updateAdjustVisibility();
-
-                if (state.startTime) {
-                    const duration = (state.endTime - state.startTime) / 1000;
-                    console.log('=== ESTADÍSTICAS ===');
-                    console.log(`Ganador: ${winnerName}`);
-                    console.log(`Duración: ${Math.floor(duration/60)}m ${Math.floor(duration%60)}s`);
-                    console.log(`Movimientos blancas: ${state.whiteMoves}`);
-                    console.log(`Movimientos negras: ${state.blackMoves}`);
-                    console.log('====================');
-                }
             }
 
             // ---------- Celebración ----------
@@ -1976,26 +2101,23 @@
                 const base = parseFloat(baseTimeInput.value);
                 const inc = parseInt(incrementInput.value) || 0;
                 const move = parseInt(moveTimeInput.value) || 30;
+                const byoPeriods = parseInt(byoyomiPeriodsInput.value) || 3;
+                const byoTime = parseInt(byoyomiTimeInput.value) || 30;
+                state.byoyomiPeriods = byoPeriods;
+                state.byoyomiTime = byoTime;
 
                 if (state.mode === 'movetimer') {
-                    if (isNaN(move) || move < 1) {
-                        announce('⚠️ Tiempo por movimiento inválido, se usa 30s');
-                        moveTimeInput.value = 30;
-                        state.moveTime = 30;
-                    } else {
-                        state.moveTime = move;
-                    }
+                    if (isNaN(move) || move < 1) { moveTimeInput.value = 30;
+                        state.moveTime = 30; } else state.moveTime = move;
                     state.baseTime = 5;
                 } else {
-                    if (isNaN(base) || base <= 0) {
-                        announce('⚠️ Tiempo base inválido, se usa 5 min');
-                        baseTimeInput.value = 5;
-                        state.baseTime = 5;
-                    } else {
-                        state.baseTime = base;
-                    }
-                    if (state.mode === 'increment' || state.mode === 'bronstein') {
+                    if (isNaN(base) || base <= 0) { baseTimeInput.value = 5;
+                        state.baseTime = 5; } else state.baseTime = base;
+                    if (state.mode === 'increment' || state.mode === 'bronstein' || state.mode === 'delay') {
                         state.increment = inc >= 0 ? inc : 0;
+                    }
+                    if (state.mode === 'delay') {
+                        state.delayTime = inc >= 0 ? inc : 0;
                     }
                 }
 
@@ -2007,6 +2129,7 @@
                 }
                 state.whiteTime = initial;
                 state.blackTime = initial;
+                state.maxTime = initial;
                 state.whiteMoves = 0;
                 state.blackMoves = 0;
                 state.whiteTotalTimeUsed = 0;
@@ -2020,6 +2143,14 @@
                 state.endTime = null;
                 state.turnElapsed = 0;
                 state.timeAccumulator = 0;
+
+                state.whiteDelay = 0;
+                state.blackDelay = 0;
+                state.whiteByoyomiLeft = state.byoyomiPeriods;
+                state.blackByoyomiLeft = state.byoyomiPeriods;
+                state.whiteByoyomiTimer = 0;
+                state.blackByoyomiTimer = 0;
+
                 soundStart();
                 vibrate(50);
                 lastTimestamp = performance.now();
@@ -2072,6 +2203,13 @@
                 state.blackTotalTimeUsed = 0;
                 state.turnElapsed = 0;
                 state.timeAccumulator = 0;
+                state.whiteDelay = 0;
+                state.blackDelay = 0;
+                state.maxTime = 0;
+                state.whiteByoyomiLeft = 0;
+                state.blackByoyomiLeft = 0;
+                state.whiteByoyomiTimer = 0;
+                state.blackByoyomiTimer = 0;
                 let initial;
                 if (state.mode === 'movetimer') {
                     initial = (parseInt(moveTimeInput.value) || 30) * 10;
@@ -2143,6 +2281,20 @@
                 state.activePlayer = (player === 'white') ? 'black' : 'white';
                 state.turnElapsed = 0;
                 state.timeAccumulator = 0;
+
+                // Gestionar delay y Byoyomi al cambiar de turno
+                if (state.mode === 'delay') {
+                    const next = state.activePlayer;
+                    state[next + 'Delay'] = state.delayTime * 10;
+                }
+                if (state.mode === 'byoyomi') {
+                    const next = state.activePlayer;
+                    const timerKey = next + 'ByoyomiTimer';
+                    if (state[next + 'Time'] <= 0) {
+                        state[timerKey] = state.byoyomiTime * 10;
+                    }
+                }
+
                 vibrate(30);
                 const next = state.activePlayer === 'white' ? 'Blancas' : 'Negras';
                 announce(`Turno de ${next}`);
@@ -2158,16 +2310,28 @@
                 state.mode = mode;
 
                 const showBase = (mode !== 'movetimer');
-                const showIncrement = (mode === 'increment' || mode === 'bronstein');
+                const showIncrement = (mode === 'increment' || mode === 'bronstein' || mode === 'delay');
                 const showMoveTime = (mode === 'movetimer');
+                const showByoyomi = (mode === 'byoyomi');
 
                 baseTimeGroup.style.display = showBase ? 'flex' : 'none';
                 incrementGroup.style.display = showIncrement ? 'flex' : 'none';
                 moveTimeGroup.style.display = showMoveTime ? 'flex' : 'none';
+                byoyomiGroup.style.display = showByoyomi ? 'flex' : 'none';
 
                 incrementInput.disabled = !showIncrement;
                 moveTimeInput.disabled = !showMoveTime;
                 baseTimeInput.disabled = !showBase;
+                byoyomiPeriodsInput.disabled = !showByoyomi;
+                byoyomiTimeInput.disabled = !showByoyomi;
+
+                const label = document.getElementById('increment-label');
+                if (mode === 'delay') label.textContent = 'Retraso (seg)';
+                else label.textContent = 'Incremento (seg)';
+
+                if (mode === 'hourglass' || mode === 'byoyomi') {
+                    incrementGroup.style.display = 'none';
+                }
 
                 if (reset && state.isRunning) stopTimerLoop();
                 if (reset) resetGame();
@@ -2247,6 +2411,7 @@
                     { id: 'fixed-5', name: '5 min', mode: 'standard', base: 5, inc: 0 },
                     { id: 'fixed-5+3', name: '5+3', mode: 'increment', base: 5, inc: 3 },
                     { id: 'fixed-10', name: '10 min', mode: 'standard', base: 10, inc: 0 },
+                    { id: 'fixed-byo-5+3x30', name: 'Byo 5m+3x30s', mode: 'byoyomi', base: 5, inc: 30 },
                 ];
                 const allPresets = [...fixedPresets, ...state.customPresets];
                 allPresets.forEach(preset => {
@@ -2279,7 +2444,8 @@
                         presetName.value = '';
                         presetMode.value = modeSelect.value;
                         presetBase.value = baseTimeInput.value;
-                        presetInc.value = (modeSelect.value === 'movetimer') ? moveTimeInput.value : incrementInput.value;
+                        presetInc.value = (modeSelect.value === 'movetimer') ? moveTimeInput.value : incrementInput
+                        .value;
                         presetName.focus();
                     }
                 });
@@ -2292,8 +2458,12 @@
                 const inc = parseInt(btn.dataset.inc) || 0;
                 modeSelect.value = mode;
                 baseTimeInput.value = base;
-                if (mode === 'increment' || mode === 'bronstein') incrementInput.value = inc;
+                if (mode === 'increment' || mode === 'bronstein' || mode === 'delay') incrementInput.value = inc;
                 else if (mode === 'movetimer') moveTimeInput.value = inc > 0 ? inc : 30;
+                else if (mode === 'byoyomi') {
+                    byoyomiPeriodsInput.value = 3;
+                    byoyomiTimeInput.value = inc > 0 ? inc : 30;
+                }
                 onModeChange(true);
                 announce(`Preset: ${btn.textContent.replace('×','').trim()}`);
                 vibrate(30);
@@ -2396,7 +2566,6 @@
                 renderPresets();
                 updateAutoIcon();
 
-                // Configurar paso de ajuste
                 state.adjustStep = parseInt(adjustStepSelect.value) * 10;
                 adjustStepSelect.addEventListener('change', function() {
                     state.adjustStep = parseInt(this.value) * 10;
@@ -2404,7 +2573,6 @@
                     announce(`Paso de ajuste: ${this.value} segundos`);
                 });
 
-                // Eventos de ajuste paso fijo
                 adjustBtns.forEach(btn => {
                     btn.addEventListener('click', function(e) {
                         e.stopPropagation();
@@ -2419,7 +2587,6 @@
                     });
                 });
 
-                // Eventos de ajuste manual (engrane)
                 manualAdjustBtns.forEach(btn => {
                     btn.addEventListener('click', function(e) {
                         e.stopPropagation();
@@ -2428,7 +2595,6 @@
                     });
                 });
 
-                // Modal manual
                 manualApply.addEventListener('click', applyManualAdjust);
                 manualCancel.addEventListener('click', closeManualModal);
                 manualModal.addEventListener('click', function(e) {
@@ -2441,18 +2607,18 @@
                     });
                 });
 
-                // NUEVO: Evento del checkbox de estadísticas
                 showStatsCheck.addEventListener('change', function() {
                     state.showStats = this.checked;
                     saveSettings();
                     announce(state.showStats ? 'Estadísticas activadas' : 'Estadísticas desactivadas');
                 });
 
-                // Eventos existentes
                 modeSelect.addEventListener('change', () => onModeChange(true));
                 baseTimeInput.addEventListener('change', saveSettings);
                 incrementInput.addEventListener('change', saveSettings);
                 moveTimeInput.addEventListener('change', saveSettings);
+                byoyomiPeriodsInput.addEventListener('change', saveSettings);
+                byoyomiTimeInput.addEventListener('change', saveSettings);
                 btnStart.addEventListener('click', startGame);
                 btnPause.addEventListener('click', togglePause);
                 btnReset.addEventListener('click', resetGame);
@@ -2484,7 +2650,8 @@
                         presetName.value = '';
                         presetMode.value = modeSelect.value;
                         presetBase.value = baseTimeInput.value;
-                        presetInc.value = (modeSelect.value === 'movetimer') ? moveTimeInput.value : incrementInput.value;
+                        presetInc.value = (modeSelect.value === 'movetimer') ? moveTimeInput.value : incrementInput
+                        .value;
                         presetName.focus();
                     }
                 });
@@ -2497,7 +2664,6 @@
 
                 document.addEventListener('visibilitychange', handleVisibilityChange);
 
-                // Registro del Service Worker para PWA
                 if ('serviceWorker' in navigator) {
                     navigator.serviceWorker.register('/sw.js')
                         .then(() => console.log('Service Worker registrado'))
