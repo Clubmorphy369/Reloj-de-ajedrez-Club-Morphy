@@ -8,1056 +8,432 @@
     <link rel="manifest" href="/manifest.json">
     <style>
         /* ============================================================
-           CSS COMPLETO (sin cambios)
+           CSS (igual que antes, con ajustes menores)
            ============================================================ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
         :root {
-            --primary: #4A8CFF;
-            --primary-hover: #3A7CEF;
-            --primary-light: rgba(74, 140, 255, 0.2);
-            --primary-glow: rgba(74, 140, 255, 0.4);
-            --bg: #0B0F1A;
-            --surface: rgba(26, 31, 46, 0.75);
-            --surface-2: rgba(42, 48, 64, 0.6);
-            --text: #F0F4FF;
-            --text-soft: #9AA6C0;
-            --border: rgba(47, 58, 74, 0.5);
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-            --radius: 20px;
-            --progress-bg: rgba(255, 255, 255, 0.1);
-            --glass-blur: blur(12px);
-            --success: #22C55E;
-            --warning: #F59E0B;
-            --danger: #EF4444;
+            --primary: #4A8CFF; --primary-hover: #3A7CEF;
+            --primary-light: rgba(74,140,255,0.2); --primary-glow: rgba(74,140,255,0.4);
+            --bg: #0B0F1A; --surface: rgba(26,31,46,0.75); --surface-2: rgba(42,48,64,0.6);
+            --text: #F0F4FF; --text-soft: #9AA6C0; --border: rgba(47,58,74,0.5);
+            --shadow: 0 8px 32px rgba(0,0,0,0.5); --radius: 20px;
+            --progress-bg: rgba(255,255,255,0.1); --glass-blur: blur(12px);
+            --success: #22C55E; --warning: #F59E0B; --danger: #EF4444;
         }
-        [data-theme="blue"] {
-            --primary: #4A8CFF;
-            --primary-hover: #3A7CEF;
-            --primary-light: rgba(74, 140, 255, 0.2);
-            --primary-glow: rgba(74, 140, 255, 0.4);
-        }
-        [data-theme="green"] {
-            --primary: #22C55E;
-            --primary-hover: #16A34A;
-            --primary-light: rgba(34, 197, 94, 0.2);
-            --primary-glow: rgba(34, 197, 94, 0.4);
-        }
-        [data-theme="purple"] {
-            --primary: #A855F7;
-            --primary-hover: #9333EA;
-            --primary-light: rgba(168, 85, 247, 0.2);
-            --primary-glow: rgba(168, 85, 247, 0.4);
-        }
-        [data-theme="red"] {
-            --primary: #EF4444;
-            --primary-hover: #DC2626;
-            --primary-light: rgba(239, 68, 68, 0.2);
-            --primary-glow: rgba(239, 68, 68, 0.4);
-        }
-        [data-theme="amber"] {
-            --primary: #F59E0B;
-            --primary-hover: #D97706;
-            --primary-light: rgba(245, 158, 11, 0.2);
-            --primary-glow: rgba(245, 158, 11, 0.4);
-        }
-        [data-theme-mode="light"] {
-            --bg: #F4F8FD;
-            --surface: rgba(255, 255, 255, 0.8);
-            --surface-2: rgba(237, 244, 255, 0.7);
-            --text: #1F2937;
-            --text-soft: #6B7280;
-            --border: rgba(217, 230, 248, 0.6);
-            --shadow: 0 8px 32px rgba(37, 99, 235, 0.12);
-            --progress-bg: rgba(0, 0, 0, 0.08);
-        }
-        [data-theme-mode="dark"] {
-            --bg: #0B0F1A;
-            --surface: rgba(26, 31, 46, 0.75);
-            --surface-2: rgba(42, 48, 64, 0.6);
-            --text: #F0F4FF;
-            --text-soft: #9AA6C0;
-            --border: rgba(47, 58, 74, 0.5);
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-            --progress-bg: rgba(255, 255, 255, 0.1);
-        }
-        html,
-        body {
-            height: 100%;
-            overflow: hidden;
-        }
+        [data-theme="blue"] { --primary: #4A8CFF; --primary-hover: #3A7CEF; --primary-light: rgba(74,140,255,0.2); --primary-glow: rgba(74,140,255,0.4); }
+        [data-theme="green"] { --primary: #22C55E; --primary-hover: #16A34A; --primary-light: rgba(34,197,94,0.2); --primary-glow: rgba(34,197,94,0.4); }
+        [data-theme="purple"] { --primary: #A855F7; --primary-hover: #9333EA; --primary-light: rgba(168,85,247,0.2); --primary-glow: rgba(168,85,247,0.4); }
+        [data-theme="red"] { --primary: #EF4444; --primary-hover: #DC2626; --primary-light: rgba(239,68,68,0.2); --primary-glow: rgba(239,68,68,0.4); }
+        [data-theme="amber"] { --primary: #F59E0B; --primary-hover: #D97706; --primary-light: rgba(245,158,11,0.2); --primary-glow: rgba(245,158,11,0.4); }
+        [data-theme-mode="light"] { --bg: #F4F8FD; --surface: rgba(255,255,255,0.8); --surface-2: rgba(237,244,255,0.7); --text: #1F2937; --text-soft: #6B7280; --border: rgba(217,230,248,0.6); --shadow: 0 8px 32px rgba(37,99,235,0.12); --progress-bg: rgba(0,0,0,0.08); }
+        [data-theme-mode="dark"] { --bg: #0B0F1A; --surface: rgba(26,31,46,0.75); --surface-2: rgba(42,48,64,0.6); --text: #F0F4FF; --text-soft: #9AA6C0; --border: rgba(47,58,74,0.5); --shadow: 0 8px 32px rgba(0,0,0,0.5); --progress-bg: rgba(255,255,255,0.1); }
+        html,body { height:100%; overflow:hidden; }
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0;
-            margin: 0;
+            background: var(--bg); color: var(--text);
+            display:flex; justify-content:center; align-items:center;
+            padding:0; margin:0;
             transition: background 0.3s, color 0.3s;
             touch-action: manipulation;
         }
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
+        @media (prefers-reduced-motion: reduce) { * { animation-duration:0.01ms !important; transition-duration:0.01ms !important; } }
         .container {
-            width: 100%;
-            height: 100dvh;
-            max-width: 600px;
-            background: var(--surface);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-            padding: 12px 16px 16px;
+            width:100%; height:100dvh; max-width:600px;
+            background: var(--surface); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+            border:1px solid var(--border); box-shadow: var(--shadow);
+            display:flex; flex-direction:column; padding:12px 16px 16px;
             transition: background 0.3s, border-color 0.3s;
-            position: relative;
-            overflow: hidden;
-            border-radius: var(--radius);
+            position:relative; overflow:hidden; border-radius:var(--radius);
         }
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 4px 0;
-            flex-shrink: 0;
-            z-index: 10;
-            gap: 4px;
-            flex-wrap: wrap;
+            display:flex; justify-content:space-between; align-items:center;
+            padding:4px 0; flex-shrink:0; z-index:10; gap:4px; flex-wrap:wrap;
         }
         .header .title-area {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-soft);
-            cursor: pointer;
-            transition: color 0.2s;
+            display:flex; align-items:center; gap:4px;
+            font-size:0.9rem; font-weight:600; color:var(--text-soft);
+            cursor:pointer; transition:color 0.2s;
         }
-        .header .title-area:hover {
-            color: var(--primary);
-        }
-        .header .title-area .edit-icon {
-            font-size: 0.7rem;
-            opacity: 0.5;
-        }
+        .header .title-area:hover { color:var(--primary); }
+        .header .title-area .edit-icon { font-size:0.7rem; opacity:0.5; }
         .header .badge-mode {
-            background: var(--primary-light);
-            color: var(--primary);
-            padding: 2px 12px;
-            border-radius: 30px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            border: 1px solid var(--border);
-            white-space: nowrap;
+            background:var(--primary-light); color:var(--primary);
+            padding:2px 12px; border-radius:30px;
+            font-size:0.65rem; font-weight:600;
+            border:1px solid var(--border); white-space:nowrap;
         }
         .header-actions {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-            flex-wrap: wrap;
+            display:flex; gap:4px; align-items:center; flex-wrap:wrap;
         }
-        .header-actions button,
-        .header-actions label {
-            background: transparent;
-            border: none;
-            font-size: 1.2rem;
-            padding: 4px 6px;
-            cursor: pointer;
-            color: var(--text-soft);
-            transition: color 0.2s, background 0.2s;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
+        .header-actions button, .header-actions label {
+            background:transparent; border:none;
+            font-size:1.2rem; padding:4px 6px;
+            cursor:pointer; color:var(--text-soft);
+            transition:color 0.2s, background 0.2s;
+            border-radius:30px; display:flex; align-items:center;
         }
-        .header-actions button:hover,
-        .header-actions label:hover {
-            color: var(--primary);
-            background: var(--surface-2);
+        .header-actions button:hover, .header-actions label:hover {
+            color:var(--primary); background:var(--surface-2);
         }
-        .header-actions input[type="checkbox"] {
-            width: 0;
-            height: 0;
-            opacity: 0;
-            position: absolute;
-        }
+        .header-actions input[type="checkbox"] { width:0; height:0; opacity:0; position:absolute; }
         .header-actions .auto-label {
-            font-size: 1rem;
-            padding: 2px 8px;
-            gap: 2px;
-            cursor: pointer;
-            border-radius: 30px;
-            border: 1px solid transparent;
-            transition: all 0.2s;
+            font-size:1rem; padding:2px 8px; gap:2px;
+            cursor:pointer; border-radius:30px;
+            border:1px solid transparent; transition:all 0.2s;
         }
         .header-actions .auto-label.active {
-            border-color: var(--primary);
-            background: var(--primary-light);
-            color: var(--primary);
+            border-color:var(--primary); background:var(--primary-light); color:var(--primary);
         }
-        .header-actions .auto-label .icon {
-            font-size: 1.1rem;
-        }
+        .header-actions .auto-label .icon { font-size:1.1rem; }
         .clocks {
-            flex: 1 1 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin: 6px 0 10px;
-            min-height: 0;
+            flex:1 1 auto; display:flex; flex-direction:column; gap:10px;
+            margin:6px 0 10px; min-height:0;
         }
         .clock {
-            background: var(--surface-2);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 2px solid var(--border);
-            border-radius: 16px;
-            padding: 16px 18px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-            cursor: pointer;
-            user-select: none;
-            flex: 1;
-            min-height: 80px;
-            position: relative;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            background:var(--surface-2); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);
+            border:2px solid var(--border); border-radius:16px;
+            padding:16px 18px;
+            display:flex; flex-direction:column; justify-content:center; align-items:center;
+            transition:all 0.3s cubic-bezier(0.22,1,0.36,1);
+            cursor:pointer; user-select:none; flex:1; min-height:80px;
+            position:relative; box-shadow:0 4px 16px rgba(0,0,0,0.2);
         }
-        .clock:active {
-            transform: scale(0.98);
-        }
+        .clock:active { transform:scale(0.98); }
         .clock.active {
-            border-color: var(--primary);
-            box-shadow: 0 0 30px var(--primary-glow), inset 0 0 20px var(--primary-light);
-            background: var(--primary-light);
-            transform: scale(1.01);
+            border-color:var(--primary);
+            box-shadow:0 0 30px var(--primary-glow), inset 0 0 20px var(--primary-light);
+            background:var(--primary-light); transform:scale(1.01);
         }
-        .clock.inactive {
-            opacity: 0.7;
-            filter: grayscale(0.3);
-        }
-        .clock.warning {
-            border-color: var(--warning);
-            animation: pulse-warning 1s infinite;
-        }
-        .clock.flagged {
-            border-color: var(--danger);
-            background: rgba(239, 68, 68, 0.2);
-            animation: pulse-flag 0.5s infinite;
-        }
+        .clock.inactive { opacity:0.7; filter:grayscale(0.3); }
+        .clock.warning { border-color:var(--warning); animation:pulse-warning 1s infinite; }
+        .clock.flagged { border-color:var(--danger); background:rgba(239,68,68,0.2); animation:pulse-flag 0.5s infinite; }
         .clock.winner {
-            border-color: var(--success);
-            background: rgba(34, 197, 94, 0.15);
-            box-shadow: 0 0 40px rgba(34, 197, 94, 0.4);
-            animation: glow-green 1.5s ease-in-out infinite alternate;
+            border-color:var(--success); background:rgba(34,197,94,0.15);
+            box-shadow:0 0 40px rgba(34,197,94,0.4);
+            animation:glow-green 1.5s ease-in-out infinite alternate;
         }
-        @keyframes pulse-warning {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.6;
-            }
-        }
-        @keyframes pulse-flag {
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.4;
-                transform: scale(0.98);
-            }
-        }
-        @keyframes glow-green {
-            0% {
-                box-shadow: 0 0 10px rgba(34, 197, 94, 0.2);
-            }
-            100% {
-                box-shadow: 0 0 50px rgba(34, 197, 94, 0.6);
-            }
-        }
+        @keyframes pulse-warning { 0%,100%{ opacity:1; } 50%{ opacity:0.6; } }
+        @keyframes pulse-flag { 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:0.4; transform:scale(0.98); } }
+        @keyframes glow-green { 0%{ box-shadow:0 0 10px rgba(34,197,94,0.2); } 100%{ box-shadow:0 0 50px rgba(34,197,94,0.6); } }
         .clock .player {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-soft);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 2px;
+            font-size:1rem; font-weight:600; color:var(--text-soft);
+            display:flex; align-items:center; gap:6px; margin-bottom:2px;
         }
-        .clock .player .icon {
-            font-size: 1.2rem;
-        }
+        .clock .player .icon { font-size:1.2rem; }
         .turn-indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #4A5568;
-            transition: background 0.3s;
-            display: inline-block;
+            width:12px; height:12px; border-radius:50%;
+            background:#4A5568; transition:background 0.3s;
+            display:inline-block;
         }
-        .clock.active .turn-indicator {
-            background: var(--success);
-            box-shadow: 0 0 12px rgba(34, 197, 94, 0.6);
-        }
+        .clock.active .turn-indicator { background:var(--success); box-shadow:0 0 12px rgba(34,197,94,0.6); }
         .clock .time {
-            font-size: 4.5rem;
-            font-weight: 700;
-            font-variant-numeric: tabular-nums;
-            letter-spacing: 2px;
-            color: var(--text);
-            line-height: 1.1;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            transition: color 0.3s;
+            font-size:4.5rem; font-weight:700; font-variant-numeric:tabular-nums;
+            letter-spacing:2px; color:var(--text);
+            line-height:1.1; text-shadow:0 2px 8px rgba(0,0,0,0.3);
+            transition:color 0.3s;
         }
-        .clock .time .decimals {
-            font-size: 0.5em;
-            font-weight: 500;
-            color: var(--text-soft);
-        }
-        .clock .time.warning {
-            color: var(--warning);
-        }
-        .clock .time.flagged {
-            color: var(--danger);
-        }
+        .clock .time .decimals { font-size:0.5em; font-weight:500; color:var(--text-soft); }
+        .clock .time.warning { color:var(--warning); }
+        .clock .time.flagged { color:var(--danger); }
         .clock .move-counter {
-            font-size: 0.75rem;
-            color: var(--text-soft);
-            background: var(--surface-2);
-            padding: 2px 14px;
-            border-radius: 20px;
-            margin-top: 2px;
+            font-size:0.75rem; color:var(--text-soft);
+            background:var(--surface-2); padding:2px 14px; border-radius:20px;
+            margin-top:2px;
         }
         .clock .turn-counter {
-            font-size: 0.65rem;
-            color: var(--text-soft);
-            opacity: 0.7;
-            margin-top: 1px;
+            font-size:0.65rem; color:var(--text-soft); opacity:0.7; margin-top:1px;
         }
         .time-progress {
-            width: 100%;
-            height: 8px;
-            background: var(--progress-bg);
-            border-radius: 12px;
-            margin-top: 6px;
-            overflow: hidden;
-            transition: background 0.3s;
+            width:100%; height:8px;
+            background:var(--progress-bg); border-radius:12px;
+            margin-top:6px; overflow:hidden; transition:background 0.3s;
         }
         .time-progress .fill {
-            height: 100%;
-            border-radius: 12px;
-            transition: width 0.3s linear, background 0.5s;
+            height:100%; border-radius:12px;
+            transition:width 0.3s linear, background 0.5s;
         }
         .adjust-controls {
-            display: none;
-            gap: 6px;
-            margin-top: 4px;
-            justify-content: center;
-            flex-wrap: wrap;
+            display:none; gap:6px; margin-top:4px;
+            justify-content:center; flex-wrap:wrap;
         }
-        .adjust-controls.visible {
-            display: flex;
-        }
+        .adjust-controls.visible { display:flex; }
         .adjust-controls button {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 30px;
-            color: var(--text);
-            font-size: 1.2rem;
-            font-weight: 700;
-            padding: 2px 14px;
-            cursor: pointer;
-            transition: background 0.2s;
-            touch-action: manipulation;
-            min-height: 36px;
-            min-width: 48px;
+            background:var(--surface); border:1px solid var(--border); border-radius:30px;
+            color:var(--text); font-size:1.2rem; font-weight:700;
+            padding:2px 14px; cursor:pointer; transition:background 0.2s;
+            touch-action:manipulation; min-height:36px; min-width:48px;
         }
-        .adjust-controls button:hover {
-            background: var(--primary-light);
-            color: var(--primary);
-        }
-        .adjust-controls button:active {
-            transform: scale(0.95);
-        }
-        .adjust-controls .manual-adjust-btn {
-            font-size: 1rem;
-            padding: 2px 10px;
-            min-width: 40px;
-        }
-        .clock.paused .adjust-controls {
-            display: flex;
-        }
+        .adjust-controls button:hover { background:var(--primary-light); color:var(--primary); }
+        .adjust-controls button:active { transform:scale(0.95); }
+        .adjust-controls .manual-adjust-btn { font-size:1rem; padding:2px 10px; min-width:40px; }
+        .clock.paused .adjust-controls { display:flex; }
         .manual-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
-            z-index: 4000;
-            align-items: center;
-            justify-content: center;
+            display:none; position:fixed; top:0; left:0; right:0; bottom:0;
+            background:rgba(0,0,0,0.6); backdrop-filter:blur(4px);
+            z-index:4000; align-items:center; justify-content:center;
         }
-        .manual-modal.active {
-            display: flex;
-        }
+        .manual-modal.active { display:flex; }
         .manual-modal-content {
-            background: var(--surface);
-            backdrop-filter: var(--glass-blur);
-            border-radius: var(--radius);
-            padding: 24px;
-            max-width: 320px;
-            width: 90%;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow);
-            text-align: center;
+            background:var(--surface); backdrop-filter:var(--glass-blur);
+            border-radius:var(--radius); padding:24px; max-width:320px; width:90%;
+            border:1px solid var(--border); box-shadow:var(--shadow);
+            text-align:center;
         }
-        .manual-modal-content h3 {
-            margin-bottom: 16px;
-            color: var(--text);
-            font-size: 1.2rem;
-        }
+        .manual-modal-content h3 { margin-bottom:16px; color:var(--text); font-size:1.2rem; }
         .manual-modal-content .time-inputs {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
+            display:flex; gap:8px; justify-content:center; margin-bottom:16px; flex-wrap:wrap;
         }
         .manual-modal-content .time-inputs .input-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
+            display:flex; flex-direction:column; align-items:center; gap:2px;
         }
         .manual-modal-content .time-inputs .input-group label {
-            font-size: 0.6rem;
-            color: var(--text-soft);
-            text-transform: uppercase;
+            font-size:0.6rem; color:var(--text-soft); text-transform:uppercase;
         }
         .manual-modal-content .time-inputs input {
-            width: 60px;
-            padding: 6px 4px;
-            font-size: 1.2rem;
-            text-align: center;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            outline: none;
-            font-weight: 600;
+            width:60px; padding:6px 4px; font-size:1.2rem; text-align:center;
+            background:var(--surface); border:1px solid var(--border); border-radius:8px;
+            color:var(--text); outline:none; font-weight:600;
         }
-        .manual-modal-content .time-inputs input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 8px var(--primary-glow);
-        }
+        .manual-modal-content .time-inputs input:focus { border-color:var(--primary); box-shadow:0 0 8px var(--primary-glow); }
         .manual-modal-content .modal-actions {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
+            display:flex; gap:8px; justify-content:center;
         }
         .manual-modal-content .modal-actions button {
-            padding: 8px 20px;
-            border-radius: 30px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            font-size: 0.9rem;
-            min-width: 80px;
+            padding:8px 20px; border-radius:30px; border:none;
+            font-weight:600; cursor:pointer; transition:background 0.2s;
+            font-size:0.9rem; min-width:80px;
         }
-        .manual-modal-content .modal-actions .btn-apply {
-            background: var(--primary);
-            color: #fff;
-        }
-        .manual-modal-content .modal-actions .btn-apply:hover {
-            background: var(--primary-hover);
-        }
-        .manual-modal-content .modal-actions .btn-cancel-modal {
-            background: var(--surface-2);
-            color: var(--text-soft);
-        }
-        .manual-modal-content .modal-actions .btn-cancel-modal:hover {
-            background: var(--border);
-        }
+        .manual-modal-content .modal-actions .btn-apply { background:var(--primary); color:#fff; }
+        .manual-modal-content .modal-actions .btn-apply:hover { background:var(--primary-hover); }
+        .manual-modal-content .modal-actions .btn-cancel-modal { background:var(--surface-2); color:var(--text-soft); }
+        .manual-modal-content .modal-actions .btn-cancel-modal:hover { background:var(--border); }
         .controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-            flex-shrink: 0;
-            padding: 4px 0;
+            display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
+            flex-shrink:0; padding:4px 0;
         }
         .controls button {
-            font: inherit;
-            border: none;
-            border-radius: 40px;
-            padding: 16px 12px;
-            min-height: 52px;
-            font-weight: 700;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.25s;
-            background: var(--surface-2);
-            color: var(--text);
-            box-shadow: var(--shadow);
-            flex: 1 0 30%;
-            min-width: 80px;
-            text-align: center;
-            touch-action: manipulation;
-            backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--border);
+            font:inherit; border:none; border-radius:40px;
+            padding:16px 12px; min-height:52px;
+            font-weight:700; font-size:1.2rem;
+            cursor:pointer; transition:all 0.25s;
+            background:var(--surface-2); color:var(--text);
+            box-shadow:var(--shadow); flex:1 0 30%; min-width:80px;
+            text-align:center; touch-action:manipulation;
+            backdrop-filter:var(--glass-blur); border:1px solid var(--border);
         }
-        .controls button:active {
-            transform: scale(0.95);
-        }
-        .controls button:disabled {
-            opacity: 0.4;
-            pointer-events: none;
-            transform: none;
-        }
-        .btn-primary {
-            background: var(--primary);
-            color: #fff;
-            border-color: var(--primary);
-        }
-        .btn-primary:hover {
-            background: var(--primary-hover);
-        }
-        .btn-danger {
-            background: var(--danger);
-            color: #fff;
-            border-color: var(--danger);
-        }
-        .btn-danger:hover {
-            background: #DC2626;
-        }
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--border);
-        }
+        .controls button:active { transform:scale(0.95); }
+        .controls button:disabled { opacity:0.4; pointer-events:none; transform:none; }
+        .btn-primary { background:var(--primary); color:#fff; border-color:var(--primary); }
+        .btn-primary:hover { background:var(--primary-hover); }
+        .btn-danger { background:var(--danger); color:#fff; border-color:var(--danger); }
+        .btn-danger:hover { background:#DC2626; }
+        .btn-outline { background:transparent; border:2px solid var(--border); }
         .config-panel {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--surface);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border-top: 2px solid var(--border);
-            border-radius: 24px 24px 0 0;
-            padding: 20px 20px 30px;
-            max-height: 80vh;
-            overflow-y: auto;
-            transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-            z-index: 1000;
-            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
+            position:fixed; bottom:0; left:0; right:0;
+            background:var(--surface); backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);
+            border-top:2px solid var(--border);
+            border-radius:24px 24px 0 0;
+            padding:20px 20px 30px;
+            max-height:80vh; overflow-y:auto;
+            transform:translateY(100%);
+            transition:transform 0.4s cubic-bezier(0.22,1,0.36,1);
+            z-index:1000;
+            box-shadow:0 -10px 40px rgba(0,0,0,0.3);
         }
-        .config-panel.open {
-            transform: translateY(0);
-        }
+        .config-panel.open { transform:translateY(0); }
         .config-panel .panel-handle {
-            width: 40px;
-            height: 4px;
-            background: var(--text-soft);
-            border-radius: 10px;
-            margin: 0 auto 16px;
-            opacity: 0.5;
+            width:40px; height:4px; background:var(--text-soft);
+            border-radius:10px; margin:0 auto 16px; opacity:0.5;
         }
         .config-panel .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
+            display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;
         }
-        .config-panel .panel-header h2 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text);
-        }
+        .config-panel .panel-header h2 { font-size:1.2rem; font-weight:600; color:var(--text); }
         .config-panel .panel-close {
-            background: transparent;
-            border: none;
-            font-size: 1.8rem;
-            color: var(--text-soft);
-            cursor: pointer;
-            padding: 0 8px;
+            background:transparent; border:none; font-size:1.8rem;
+            color:var(--text-soft); cursor:pointer; padding:0 8px;
         }
-        .config-panel .panel-close:hover {
-            color: var(--text);
-        }
+        .config-panel .panel-close:hover { color:var(--text); }
         .config-panel .presets {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 12px;
+            display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px;
         }
         .config-panel .presets button {
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            border-radius: 30px;
-            padding: 4px 14px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: var(--text-soft);
-            cursor: pointer;
-            transition: all 0.2s;
-            white-space: nowrap;
+            background:var(--surface-2); border:1px solid var(--border); border-radius:30px;
+            padding:4px 14px; font-size:0.75rem; font-weight:500;
+            color:var(--text-soft); cursor:pointer; transition:all 0.2s;
+            white-space:nowrap;
         }
-        .config-panel .presets button:hover {
-            background: var(--primary-light);
-            color: var(--primary);
-            border-color: var(--primary);
-        }
-        .config-panel .presets .delete-preset {
-            margin-left: 4px;
-            font-size: 0.7rem;
-            opacity: 0.5;
-            cursor: pointer;
-        }
-        .config-panel .presets .delete-preset:hover {
-            opacity: 1;
-        }
+        .config-panel .presets button:hover { background:var(--primary-light); color:var(--primary); border-color:var(--primary); }
+        .config-panel .presets .delete-preset { margin-left:4px; font-size:0.7rem; opacity:0.5; cursor:pointer; }
+        .config-panel .presets .delete-preset:hover { opacity:1; }
         .config-panel .presets .add-preset {
-            background: transparent;
-            border: 1px dashed var(--border);
-            color: var(--text-soft);
-            font-size: 1.2rem;
-            padding: 0 12px;
-            line-height: 1.8;
+            background:transparent; border:1px dashed var(--border);
+            color:var(--text-soft); font-size:1.2rem; padding:0 12px; line-height:1.8;
         }
         .config-panel .config {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            background: var(--surface-2);
-            padding: 12px 14px;
-            border-radius: 12px;
-            margin-bottom: 12px;
+            display:flex; flex-wrap:wrap; gap:8px;
+            background:var(--surface-2); padding:12px 14px; border-radius:12px;
+            margin-bottom:12px;
         }
         .config-panel .config-group {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            flex-wrap: wrap;
+            display:flex; align-items:center; gap:4px; flex-wrap:wrap;
         }
         .config-panel .config-group label {
-            font-size: 0.7rem;
-            font-weight: 500;
-            color: var(--text-soft);
+            font-size:0.7rem; font-weight:500; color:var(--text-soft);
         }
-        .config-panel .config-group input,
-        .config-panel .config-group select {
-            font: inherit;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 4px 8px;
-            color: var(--text);
-            outline: none;
-            transition: all 0.2s;
-            width: 80px;
-            font-size: 0.8rem;
+        .config-panel .config-group input, .config-panel .config-group select {
+            font:inherit; background:var(--surface); border:1px solid var(--border);
+            border-radius:8px; padding:4px 8px; color:var(--text);
+            outline:none; transition:all 0.2s; font-size:0.8rem;
         }
-        .config-panel .config-group select {
-            width: 130px;
+        .config-panel .config-group select { width:130px; }
+        .config-panel .config-group input:disabled, .config-panel .config-group select:disabled {
+            opacity:0.4; cursor:not-allowed;
         }
-        .config-panel .config-group input:disabled,
-        .config-panel .config-group select:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
+        .config-panel .config-group#byoyomi-group { display:none; }
+        .config-panel .config-group#byoyomi-group input { width:50px; }
+        .config-panel .config-group.time-input-group input {
+            width:50px; text-align:center;
         }
-        .config-panel .config-group#byoyomi-group {
-            display: none;
-        }
-        .config-panel .config-group#byoyomi-group input {
-            width: 60px;
+        .config-panel .config-group.time-input-group span {
+            font-size:0.8rem; color:var(--text-soft);
         }
         .config-panel .theme-selector {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
+            display:flex; gap:8px; align-items:center; margin-bottom:10px; flex-wrap:wrap;
         }
-        .config-panel .theme-selector label {
-            font-size: 0.7rem;
-            font-weight: 500;
-            color: var(--text-soft);
-        }
+        .config-panel .theme-selector label { font-size:0.7rem; font-weight:500; color:var(--text-soft); }
         .config-panel .theme-selector .theme-btn {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: 2px solid var(--border);
-            cursor: pointer;
-            transition: transform 0.2s, border-color 0.2s;
+            width:28px; height:28px; border-radius:50%;
+            border:2px solid var(--border); cursor:pointer;
+            transition:transform 0.2s, border-color 0.2s;
         }
-        .config-panel .theme-selector .theme-btn:hover {
-            transform: scale(1.15);
-        }
+        .config-panel .theme-selector .theme-btn:hover { transform:scale(1.15); }
         .config-panel .theme-selector .theme-btn.active {
-            border-color: var(--primary);
-            box-shadow: 0 0 12px var(--primary-glow);
+            border-color:var(--primary); box-shadow:0 0 12px var(--primary-glow);
         }
         .config-panel .stats {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px 16px;
-            background: var(--surface-2);
-            border-radius: 12px;
-            padding: 8px 14px;
-            font-size: 0.75rem;
-            color: var(--text-soft);
-            margin-bottom: 12px;
+            display:flex; flex-wrap:wrap; gap:8px 16px;
+            background:var(--surface-2); border-radius:12px;
+            padding:8px 14px; font-size:0.75rem; color:var(--text-soft);
+            margin-bottom:12px;
         }
-        .config-panel .stats .value {
-            font-weight: 600;
-            color: var(--text);
-        }
-        .config-panel .stats .highlight {
-            color: var(--primary);
-        }
+        .config-panel .stats .value { font-weight:600; color:var(--text); }
+        .config-panel .stats .highlight { color:var(--primary); }
         .config-panel .panel-actions {
-            display: flex;
-            gap: 8px;
-            justify-content: flex-end;
-            margin-top: 8px;
+            display:flex; gap:8px; justify-content:flex-end; margin-top:8px;
         }
         .config-panel .panel-actions button {
-            background: var(--surface-2);
-            border: none;
-            border-radius: 30px;
-            padding: 6px 16px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text);
-            cursor: pointer;
-            transition: all 0.2s;
+            background:var(--surface-2); border:none; border-radius:30px;
+            padding:6px 16px; font-size:0.85rem; font-weight:500;
+            color:var(--text); cursor:pointer; transition:all 0.2s;
         }
-        .config-panel .panel-actions button:hover {
-            background: var(--primary-light);
-            color: var(--primary);
+        .config-panel .panel-actions button:hover { background:var(--primary-light); color:var(--primary); }
+        .config-panel .panel-actions .btn-ready {
+            background:var(--primary); color:#fff;
         }
+        .config-panel .panel-actions .btn-ready:hover { background:var(--primary-hover); }
+        .config-panel .panel-actions .btn-cancel {
+            background:var(--surface); color:var(--text-soft);
+        }
+        .config-panel .panel-actions .btn-cancel:hover { background:var(--border); }
         .config-panel .modal-inline {
-            background: var(--surface-2);
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin: 8px 0;
-            display: none;
+            background:var(--surface-2); border-radius:12px;
+            padding:12px 16px; margin:8px 0; display:none;
         }
-        .config-panel .modal-inline.active {
-            display: block;
-        }
-        .config-panel .modal-inline .form-group {
-            margin-bottom: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
+        .config-panel .modal-inline.active { display:block; }
+        .config-panel .modal-inline .form-group { margin-bottom:8px; display:flex; flex-direction:column; gap:2px; }
         .config-panel .modal-inline .form-group label {
-            font-size: 0.7rem;
-            font-weight: 500;
-            color: var(--text-soft);
+            font-size:0.7rem; font-weight:500; color:var(--text-soft);
         }
-        .config-panel .modal-inline .form-group input,
-        .config-panel .modal-inline .form-group select {
-            font: inherit;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 6px 10px;
-            color: var(--text);
-            outline: none;
-            width: 100%;
+        .config-panel .modal-inline .form-group input, .config-panel .modal-inline .form-group select {
+            font:inherit; background:var(--surface); border:1px solid var(--border);
+            border-radius:8px; padding:6px 10px; color:var(--text);
+            outline:none; width:100%;
         }
         .config-panel .modal-inline .modal-actions {
-            display: flex;
-            gap: 8px;
-            justify-content: flex-end;
-            margin-top: 8px;
+            display:flex; gap:8px; justify-content:flex-end; margin-top:8px;
         }
         .config-panel .modal-inline .modal-actions button {
-            padding: 4px 16px;
-            border-radius: 30px;
-            border: none;
-            font-weight: 500;
-            cursor: pointer;
+            padding:4px 16px; border-radius:30px; border:none; font-weight:500; cursor:pointer;
         }
-        .config-panel .modal-inline .modal-actions .btn-cancel {
-            background: var(--surface);
-            color: var(--text-soft);
-        }
-        .config-panel .modal-inline .modal-actions .btn-save {
-            background: var(--primary);
-            color: #fff;
-        }
+        .config-panel .modal-inline .modal-actions .btn-cancel { background:var(--surface); color:var(--text-soft); }
+        .config-panel .modal-inline .modal-actions .btn-save { background:var(--primary); color:#fff; }
         .celebration-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            z-index: 2000;
-            animation: fadeInOverlay 0.6s ease;
+            position:fixed; top:0; left:0; right:0; bottom:0;
+            background:rgba(0,0,0,0.8); backdrop-filter:blur(8px);
+            display:none; align-items:center; justify-content:center; flex-direction:column;
+            z-index:2000; animation:fadeInOverlay 0.6s ease;
         }
-        .celebration-overlay.active {
-            display: flex;
-        }
-        @keyframes fadeInOverlay {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
+        .celebration-overlay.active { display:flex; }
+        @keyframes fadeInOverlay { from { opacity:0; transform:scale(0.95); } to { opacity:1; transform:scale(1); } }
         .celebration-content {
-            text-align: center;
-            padding: 20px;
-            max-width: 400px;
-            background: var(--surface);
-            backdrop-filter: var(--glass-blur);
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow);
+            text-align:center; padding:20px; max-width:400px;
+            background:var(--surface); backdrop-filter:var(--glass-blur);
+            border-radius:var(--radius); border:1px solid var(--border); box-shadow:var(--shadow);
         }
         .celebration-content .winner-text {
-            font-size: 2.8rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 12px;
-            text-shadow: 0 4px 20px var(--primary-glow);
+            font-size:2.8rem; font-weight:700; color:#fff; margin-bottom:12px;
+            text-shadow:0 4px 20px var(--primary-glow);
         }
-        .celebration-content .winner-text .trophy {
-            display: block;
-            font-size: 4rem;
-            margin-bottom: 8px;
-        }
+        .celebration-content .winner-text .trophy { display:block; font-size:4rem; margin-bottom:8px; }
         .celebration-pieces {
-            font-size: 3.5rem;
-            letter-spacing: 12px;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            animation: spinPieces 3s linear infinite;
+            font-size:3.5rem; letter-spacing:12px;
+            display:flex; justify-content:center; flex-wrap:wrap; gap:8px;
+            animation:spinPieces 3s linear infinite;
         }
         @keyframes spinPieces {
-            0% {
-                transform: rotate(0deg) scale(1);
-            }
-            50% {
-                transform: rotate(180deg) scale(1.2);
-            }
-            100% {
-                transform: rotate(360deg) scale(1);
-            }
+            0%{ transform:rotate(0deg) scale(1); }
+            50%{ transform:rotate(180deg) scale(1.2); }
+            100%{ transform:rotate(360deg) scale(1); }
         }
-        .celebration-pieces span {
-            display: inline-block;
-            animation: floatPiece 2s ease-in-out infinite alternate;
-        }
-        .celebration-pieces span:nth-child(odd) {
-            animation-delay: 0.3s;
-        }
-        @keyframes floatPiece {
-            0% {
-                transform: translateY(0) rotate(0deg);
-            }
-            100% {
-                transform: translateY(-20px) rotate(20deg);
-            }
-        }
-        .celebration-sub {
-            color: var(--text-soft);
-            font-size: 1rem;
-            margin-top: 16px;
-            opacity: 0.8;
-        }
+        .celebration-pieces span { display:inline-block; animation:floatPiece 2s ease-in-out infinite alternate; }
+        .celebration-pieces span:nth-child(odd) { animation-delay:0.3s; }
+        @keyframes floatPiece { 0%{ transform:translateY(0) rotate(0deg); } 100%{ transform:translateY(-20px) rotate(20deg); } }
+        .celebration-sub { color:var(--text-soft); font-size:1rem; margin-top:16px; opacity:0.8; }
         .celebration-stats-btn {
-            background: var(--primary);
-            color: #fff;
-            border: none;
-            border-radius: 30px;
-            padding: 10px 24px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 16px;
-            transition: background 0.2s;
+            background:var(--primary); color:#fff; border:none; border-radius:30px;
+            padding:10px 24px; font-size:1rem; font-weight:600;
+            cursor:pointer; margin-top:16px; transition:background 0.2s;
         }
-        .celebration-stats-btn:hover {
-            background: var(--primary-hover);
+        .celebration-stats-btn:hover { background:var(--primary-hover); }
+        @media (max-width:700px) {
+            .container { padding:8px 10px 12px; }
+            .clock .time { font-size:3.8rem; }
+            .controls button { font-size:1.1rem; padding:14px 8px; flex:1 0 28%; }
+            .celebration-content .winner-text { font-size:2.2rem; }
+            .celebration-pieces { font-size:2.8rem; }
         }
-        @media (max-width: 700px) {
-            .container {
-                padding: 8px 10px 12px;
-            }
-            .clock .time {
-                font-size: 3.8rem;
-            }
-            .controls button {
-                font-size: 1.1rem;
-                padding: 14px 8px;
-                flex: 1 0 28%;
-            }
-            .celebration-content .winner-text {
-                font-size: 2.2rem;
-            }
-            .celebration-pieces {
-                font-size: 2.8rem;
-            }
+        @media (max-width:450px) {
+            .clock .time { font-size:3.0rem; }
+            .controls button { font-size:0.95rem; padding:12px 6px; flex:1 0 30%; min-height:48px; }
+            .header .title-area { font-size:0.75rem; }
+            .header-actions .auto-label { font-size:0.85rem; padding:2px 6px; }
+            .celebration-content .winner-text { font-size:1.8rem; }
+            .celebration-pieces { font-size:2.2rem; }
+            .manual-modal-content .time-inputs input { width:50px; font-size:1rem; }
         }
-        @media (max-width: 450px) {
-            .clock .time {
-                font-size: 3.0rem;
-            }
-            .controls button {
-                font-size: 0.95rem;
-                padding: 12px 6px;
-                flex: 1 0 30%;
-                min-height: 48px;
-            }
-            .header .title-area {
-                font-size: 0.75rem;
-            }
-            .header-actions .auto-label {
-                font-size: 0.85rem;
-                padding: 2px 6px;
-            }
-            .celebration-content .winner-text {
-                font-size: 1.8rem;
-            }
-            .celebration-pieces {
-                font-size: 2.2rem;
-            }
-            .manual-modal-content .time-inputs input {
-                width: 50px;
-                font-size: 1rem;
-            }
+        @media (orientation:landscape) and (max-height:500px) {
+            .container { padding:4px 8px; flex-direction:row; flex-wrap:wrap; }
+            .header { width:100%; order:0; }
+            .clocks { flex-direction:row; flex:1; min-height:0; order:1; gap:6px; }
+            .clock { min-height:60px; padding:8px; }
+            .clock .time { font-size:2.8rem; }
+            .controls { order:2; width:100%; gap:4px; }
+            .controls button { font-size:0.9rem; padding:10px 4px; flex:1; min-height:44px; }
+            .clock[data-player="black"] { transform:rotate(180deg); }
+            .clock[data-player="black"] .player, .clock[data-player="black"] .time,
+            .clock[data-player="black"] .move-counter, .clock[data-player="black"] .turn-indicator,
+            .clock[data-player="black"] .time-progress, .clock[data-player="black"] .turn-counter,
+            .clock[data-player="black"] .adjust-controls { transform:rotate(-180deg); }
         }
-        @media (orientation: landscape) and (max-height: 500px) {
-            .container {
-                padding: 4px 8px;
-                flex-direction: row;
-                flex-wrap: wrap;
-            }
-            .header {
-                width: 100%;
-                order: 0;
-            }
-            .clocks {
-                flex-direction: row;
-                flex: 1;
-                min-height: 0;
-                order: 1;
-                gap: 6px;
-            }
-            .clock {
-                min-height: 60px;
-                padding: 8px;
-            }
-            .clock .time {
-                font-size: 2.8rem;
-            }
-            .controls {
-                order: 2;
-                width: 100%;
-                gap: 4px;
-            }
-            .controls button {
-                font-size: 0.9rem;
-                padding: 10px 4px;
-                flex: 1;
-                min-height: 44px;
-            }
-            .clock[data-player="black"] {
-                transform: rotate(180deg);
-            }
-            .clock[data-player="black"] .player,
-            .clock[data-player="black"] .time,
-            .clock[data-player="black"] .move-counter,
-            .clock[data-player="black"] .turn-indicator,
-            .clock[data-player="black"] .time-progress,
-            .clock[data-player="black"] .turn-counter,
-            .clock[data-player="black"] .adjust-controls {
-                transform: rotate(-180deg);
-            }
-        }
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 10px;
-        }
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            border: 0;
-        }
-        #live-announcer {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            border: 0;
-        }
-        .help-text {
-            font-size: 0.65rem;
-            color: var(--text-soft);
-            opacity: 0.7;
-            margin-top: 4px;
-        }
-        .help-text i {
-            font-style: normal;
-        }
-        .config-group .help-inline {
-            font-size: 0.6rem;
-            color: var(--text-soft);
-            opacity: 0.6;
-            margin-left: 4px;
-        }
+        ::-webkit-scrollbar { width:4px; }
+        ::-webkit-scrollbar-track { background:transparent; }
+        ::-webkit-scrollbar-thumb { background:var(--border); border-radius:10px; }
+        .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0; }
+        #live-announcer { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0; }
+        .help-text { font-size:0.65rem; color:var(--text-soft); opacity:0.7; margin-top:4px; }
+        .help-text i { font-style:normal; }
+        .config-group .help-inline { font-size:0.6rem; color:var(--text-soft); opacity:0.6; margin-left:4px; }
     </style>
 </head>
 <body>
@@ -1134,6 +510,7 @@
             <button class="btn-danger" id="btn-reset">⟲ Reiniciar</button>
         </div>
 
+        <!-- ========== PANEL DE CONFIGURACIÓN ========== -->
         <div class="config-panel" id="config-panel">
             <div class="panel-handle"></div>
             <div class="panel-header">
@@ -1153,9 +530,10 @@
             </div>
 
             <div class="presets" id="presets-container"></div>
-            <p class="help-text">💡 Los cambios se aplican al instante. Guarda un preset solo si quieres reutilizar esta configuración más tarde.</p>
+            <p class="help-text">💡 Modifica los valores y pulsa <strong>"Listo"</strong> para guardarlos. <strong>"Cancelar"</strong> descarta los cambios.</p>
 
             <div class="config">
+                <!-- Modo -->
                 <div class="config-group">
                     <label for="mode">Modo</label>
                     <select id="mode">
@@ -1168,27 +546,41 @@
                         <option value="movetimer">Tiempo por Mov.</option>
                     </select>
                 </div>
-                <div class="config-group" id="base-time-group">
-                    <label for="baseTime">Tiempo base <span class="help-inline">(segundos)</span></label>
-                    <input type="number" id="baseTime" value="300" min="1" step="1" />
-                    <span class="help-inline">ej. 300 = 5 min</span>
+
+                <!-- Tiempo base en HH:MM:SS -->
+                <div class="config-group time-input-group" id="base-time-group">
+                    <label>Tiempo base</label>
+                    <input type="number" id="base-hours" value="0" min="0" max="23" placeholder="HH" />
+                    <span>:</span>
+                    <input type="number" id="base-minutes" value="5" min="0" max="59" placeholder="MM" />
+                    <span>:</span>
+                    <input type="number" id="base-seconds" value="0" min="0" max="59" placeholder="SS" />
+                    <span class="help-inline">(horas:min:seg)</span>
                 </div>
+
+                <!-- Incremento -->
                 <div class="config-group" id="increment-group" style="display:none;">
                     <label for="increment" id="increment-label">Incremento (seg)</label>
                     <input type="number" id="increment" value="3" min="0" step="1" />
                 </div>
+
+                <!-- Byoyomi -->
                 <div class="config-group" id="byoyomi-group" style="display:none;">
                     <label for="byoyomiPeriods">Períodos</label>
                     <input type="number" id="byoyomiPeriods" value="3" min="1" step="1" />
                     <label for="byoyomiTime">Seg/Período</label>
                     <input type="number" id="byoyomiTime" value="30" min="1" step="1" />
                 </div>
+
+                <!-- Tiempo por Movimiento -->
                 <div class="config-group" id="move-time-group" style="display:none;">
                     <label for="moveTime">Segundos por movimiento</label>
                     <input type="number" id="moveTime" value="30" min="1" step="1" />
                 </div>
+
+                <!-- Ajuste manual -->
                 <div class="config-group">
-                    <label for="adjustStep">Ajuste manual (+/-) <span class="help-inline">(para los botones ± en pausa)</span></label>
+                    <label for="adjustStep">Ajuste manual (+/-)</label>
                     <select id="adjustStep">
                         <option value="1">1 segundo</option>
                         <option value="5">5 segundos</option>
@@ -1196,6 +588,7 @@
                         <option value="30" selected>30 segundos</option>
                         <option value="60">1 minuto (60s)</option>
                     </select>
+                    <span class="help-inline">(para los botones ± en pausa)</span>
                 </div>
             </div>
 
@@ -1208,6 +601,7 @@
                 </label>
             </div>
 
+            <!-- Estadísticas -->
             <div class="stats" id="stats-panel">
                 <span>⏱️ Duración: <span class="value" id="stat-duration">00:00</span></span>
                 <span>♟️ Movimientos: <span class="value" id="stat-moves">0</span></span>
@@ -1216,6 +610,7 @@
                 <span>🏆 Ganador: <span class="value highlight" id="stat-winner">--</span></span>
             </div>
 
+            <!-- Guardar preset -->
             <div class="modal-inline" id="modal-inline">
                 <div class="form-group">
                     <label for="preset-name">Nombre del preset (opcional)</label>
@@ -1247,8 +642,11 @@
                 </div>
             </div>
 
+            <!-- Botones -->
             <div class="panel-actions">
-                <button id="btn-add-preset">✚ Guardar como preset (opcional)</button>
+                <button class="btn-cancel" id="panel-cancel">Cancelar</button>
+                <button class="btn-ready" id="panel-ready">Listo</button>
+                <button id="btn-add-preset" class="btn-outline">✚ Guardar preset</button>
             </div>
         </div>
 
@@ -1321,7 +719,9 @@
             const btnPause = document.getElementById('btn-pause');
             const btnReset = document.getElementById('btn-reset');
             const modeSelect = document.getElementById('mode');
-            const baseTimeInput = document.getElementById('baseTime');
+            const baseHours = document.getElementById('base-hours');
+            const baseMinutes = document.getElementById('base-minutes');
+            const baseSeconds = document.getElementById('base-seconds');
             const incrementInput = document.getElementById('increment');
             const moveTimeInput = document.getElementById('moveTime');
             const incrementGroup = document.getElementById('increment-group');
@@ -1338,6 +738,8 @@
             const btnConfig = document.getElementById('btn-config');
             const panel = document.getElementById('config-panel');
             const panelClose = document.getElementById('panel-close');
+            const panelReady = document.getElementById('panel-ready');
+            const panelCancel = document.getElementById('panel-cancel');
             const presetsContainer = document.getElementById('presets-container');
             const modalInline = document.getElementById('modal-inline');
             const presetName = document.getElementById('preset-name');
@@ -1377,7 +779,7 @@
             const manualTitle = document.getElementById('manual-modal-title');
             const manualAdjustBtns = document.querySelectorAll('.manual-adjust-btn');
 
-            // ---------- Estado ----------
+            // ---------- Estado principal ----------
             const state = {
                 whiteTime: 3000,
                 blackTime: 3000,
@@ -1385,7 +787,7 @@
                 blackMoves: 0,
                 whiteTotalTimeUsed: 0,
                 blackTotalTimeUsed: 0,
-                baseTime: 300, // en SEGUNDOS
+                baseTime: 300, // en segundos
                 increment: 3,
                 moveTime: 30,
                 mode: 'standard',
@@ -1426,6 +828,19 @@
                 blackByoyomiTimer: 0,
             };
 
+            // ---------- Copia de trabajo para el panel ----------
+            let panelState = {
+                mode: state.mode,
+                baseTime: state.baseTime,
+                increment: state.increment,
+                moveTime: state.moveTime,
+                adjustStep: state.adjustStep,
+                byoyomiPeriods: state.byoyomiPeriods,
+                byoyomiTime: state.byoyomiTime,
+                autoPause: state.autoPause,
+                showStats: state.showStats,
+            };
+
             // ---------- Persistencia ----------
             function loadSettings() {
                 try {
@@ -1433,7 +848,11 @@
                     if (saved) {
                         const settings = JSON.parse(saved);
                         if (settings.mode) modeSelect.value = settings.mode;
-                        if (settings.baseTime) baseTimeInput.value = settings.baseTime;
+                        if (settings.baseTime) {
+                            const totalSeg = parseInt(settings.baseTime) || 300;
+                            setTimeInputsFromSeconds(totalSeg);
+                            state.baseTime = totalSeg;
+                        }
                         if (settings.increment !== undefined) incrementInput.value = settings.increment;
                         if (settings.moveTime) moveTimeInput.value = settings.moveTime;
                         if (settings.theme) {
@@ -1485,6 +904,10 @@
                         updateAutoIcon();
                         state.showStats = false;
                         showStatsCheck.checked = false;
+                        baseHours.value = 0;
+                        baseMinutes.value = 5;
+                        baseSeconds.value = 0;
+                        state.baseTime = 300;
                     }
                     const savedPresets = localStorage.getItem('chessClockCustomPresets');
                     if (savedPresets) {
@@ -1514,7 +937,8 @@
                         state.mode = game.mode || 'standard';
                         modeSelect.value = state.mode;
                         onModeChange(false);
-                        baseTimeInput.value = state.baseTime;
+                        const totalSeg = state.baseTime;
+                        setTimeInputsFromSeconds(totalSeg);
                         incrementInput.value = state.increment;
                         moveTimeInput.value = state.moveTime;
                         state.byoyomiPeriods = game.byoyomiPeriods || 3;
@@ -1540,10 +964,10 @@
             function saveSettings() {
                 try {
                     const settings = {
-                        mode: modeSelect.value,
-                        baseTime: baseTimeInput.value,
-                        increment: incrementInput.value,
-                        moveTime: moveTimeInput.value,
+                        mode: state.mode,
+                        baseTime: state.baseTime,
+                        increment: state.increment,
+                        moveTime: state.moveTime,
                         theme: state.theme,
                         themeMode: state.themeMode,
                         sound: state.soundEnabled,
@@ -1552,8 +976,8 @@
                         autoPause: state.autoPause,
                         showStats: state.showStats,
                         adjustStep: adjustStepSelect.value,
-                        byoyomiPeriods: byoyomiPeriodsInput.value,
-                        byoyomiTime: byoyomiTimeInput.value,
+                        byoyomiPeriods: state.byoyomiPeriods,
+                        byoyomiTime: state.byoyomiTime,
                     };
                     localStorage.setItem('chessClockSettings', JSON.stringify(settings));
                 } catch (_) {}
@@ -1600,9 +1024,25 @@
                 renderPresets();
             }
 
+            // ---------- Utilidades de tiempo ----------
+            function getBaseTimeFromInputs() {
+                const h = parseInt(baseHours.value) || 0;
+                const m = parseInt(baseMinutes.value) || 0;
+                const s = parseInt(baseSeconds.value) || 0;
+                return h * 3600 + m * 60 + s;
+            }
+
+            function setTimeInputsFromSeconds(totalSeg) {
+                const h = Math.floor(totalSeg / 3600);
+                const m = Math.floor((totalSeg % 3600) / 60);
+                const s = totalSeg % 60;
+                baseHours.value = h;
+                baseMinutes.value = m;
+                baseSeconds.value = s;
+            }
+
             // ---------- Sonido ----------
             let audioCtx = null;
-
             function initAudio() {
                 if (!audioCtx) {
                     try { audioCtx = new(window.AudioContext || window.webkitAudioContext)(); } catch (_) { console.warn(
@@ -1658,18 +1098,14 @@
             }
 
             function soundAlert() { playBeep(800, 300, 2); }
-
             function soundWarning() { playBeep(600, 200, 1); }
-
             function soundStart() { playBeep(1000, 150, 1); }
-
             function soundEndGame() { playMelody([523, 659, 784]); }
 
             // ---------- Notificaciones ----------
             function requestNotificationPermission() {
                 if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
             }
-
             function sendNotification(title, body) {
                 if ('Notification' in window && Notification.permission === 'granted') {
                     try { new Notification(title, { body, icon: '♟️' }); } catch (_) {}
@@ -1762,12 +1198,12 @@
                 clockWhite.setAttribute('aria-valuenow', Math.floor(state.whiteTime / 10));
                 clockBlack.setAttribute('aria-valuenow', Math.floor(state.blackTime / 10));
 
-                // Progreso: base en segundos
+                // Progreso
                 let maxDec;
                 if (state.mode === 'movetimer') {
                     maxDec = state.moveTime * 10;
                 } else {
-                    maxDec = state.baseTime * 10; // baseTime en segundos
+                    maxDec = state.baseTime * 10;
                 }
                 const pctWhite = Math.min(100, (state.whiteTime / maxDec) * 100);
                 const pctBlack = Math.min(100, (state.blackTime / maxDec) * 100);
@@ -1938,9 +1374,7 @@
 
                     const player = state.activePlayer;
 
-                    // ============================================================
-                    // 1. MODO RELOJ DE ARENA
-                    // ============================================================
+                    // ========== LÓGICA DE MODOS ==========
                     if (state.mode === 'hourglass') {
                         if (player === 'white') {
                             state.whiteTime = Math.max(0, state.whiteTime - 1);
@@ -1951,11 +1385,7 @@
                             state.whiteTime = state.whiteTime + 1;
                             state.turnElapsed += 1;
                         }
-                    }
-                    // ============================================================
-                    // 2. BYOYOMI
-                    // ============================================================
-                    else if (state.mode === 'byoyomi') {
+                    } else if (state.mode === 'byoyomi') {
                         const timerKey = player + 'ByoyomiTimer';
                         const leftKey = player + 'ByoyomiLeft';
                         const timeKey = player + 'Time';
@@ -1985,11 +1415,7 @@
                                 }
                             }
                         }
-                    }
-                    // ============================================================
-                    // 3. RETRASO SIMPLE
-                    // ============================================================
-                    else if (state.mode === 'delay') {
+                    } else if (state.mode === 'delay') {
                         const delayKey = player + 'Delay';
                         if (state[delayKey] > 0) {
                             state[delayKey] -= 1;
@@ -2002,11 +1428,8 @@
                             }
                             state.turnElapsed += 1;
                         }
-                    }
-                    // ============================================================
-                    // 4. MODOS ESTÁNDAR, INCREMENTO, BRONSTEIN, MOVETIMER
-                    // ============================================================
-                    else {
+                    } else {
+                        // Estándar, Incremento, Bronstein, Movetimer
                         if (player === 'white') {
                             state.whiteTime = Math.max(0, state.whiteTime - 1);
                         } else {
@@ -2102,7 +1525,7 @@
                 statsModal.style.display = 'none';
             }
 
-            // ---------- Acciones ----------
+            // ---------- Acciones del juego ----------
             function startGame() {
                 if (state.isRunning && !state.isPaused) return;
                 if (state.gameOver) resetGame();
@@ -2119,34 +1542,18 @@
                     updateAdjustVisibility();
                     return;
                 }
-                const base = parseFloat(baseTimeInput.value);
-                const inc = parseInt(incrementInput.value) || 0;
-                const move = parseInt(moveTimeInput.value) || 30;
-                const byoPeriods = parseInt(byoyomiPeriodsInput.value) || 3;
-                const byoTime = parseInt(byoyomiTimeInput.value) || 30;
-                state.byoyomiPeriods = byoPeriods;
-                state.byoyomiTime = byoTime;
 
-                if (state.mode === 'movetimer') {
-                    if (isNaN(move) || move < 1) { moveTimeInput.value = 30;
-                        state.moveTime = 30; } else state.moveTime = move;
-                    state.baseTime = 5;
-                } else {
-                    if (isNaN(base) || base < 1) { baseTimeInput.value = 300;
-                        state.baseTime = 300; } else state.baseTime = base;
-                    if (state.mode === 'increment' || state.mode === 'bronstein' || state.mode === 'delay') {
-                        state.increment = inc >= 0 ? inc : 0;
-                    }
-                    if (state.mode === 'delay') {
-                        state.delayTime = inc >= 0 ? inc : 0;
-                    }
-                }
+                const base = state.baseTime;
+                const inc = state.increment;
+                const move = state.moveTime;
+                const byoPeriods = state.byoyomiPeriods;
+                const byoTime = state.byoyomiTime;
 
                 let initial;
                 if (state.mode === 'movetimer') {
-                    initial = state.moveTime * 10;
+                    initial = move * 10;
                 } else {
-                    initial = state.baseTime * 10; // baseTime en segundos
+                    initial = base * 10;
                 }
                 state.whiteTime = initial;
                 state.blackTime = initial;
@@ -2167,8 +1574,8 @@
 
                 state.whiteDelay = 0;
                 state.blackDelay = 0;
-                state.whiteByoyomiLeft = state.byoyomiPeriods;
-                state.blackByoyomiLeft = state.byoyomiPeriods;
+                state.whiteByoyomiLeft = byoPeriods;
+                state.blackByoyomiLeft = byoPeriods;
                 state.whiteByoyomiTimer = 0;
                 state.blackByoyomiTimer = 0;
 
@@ -2234,9 +1641,9 @@
 
                 let initial;
                 if (state.mode === 'movetimer') {
-                    initial = (parseInt(moveTimeInput.value) || 30) * 10;
+                    initial = state.moveTime * 10;
                 } else {
-                    initial = (parseFloat(baseTimeInput.value) || 300) * 10;
+                    initial = state.baseTime * 10;
                 }
                 state.whiteTime = initial;
                 state.blackTime = initial;
@@ -2283,8 +1690,9 @@
                 if (player === 'white') {
                     state.whiteMoves++;
                     state.whiteTotalTimeUsed += timeUsed;
-                    if (state.mode === 'increment') state.whiteTime += state.increment * 10;
-                    else if (state.mode === 'bronstein') {
+                    if (state.mode === 'increment') {
+                        state.whiteTime += state.increment * 10;
+                    } else if (state.mode === 'bronstein') {
                         const incDec = state.increment * 10;
                         state.whiteTime += Math.min(incDec, timeUsed);
                     } else if (state.mode === 'movetimer') {
@@ -2293,8 +1701,9 @@
                 } else {
                     state.blackMoves++;
                     state.blackTotalTimeUsed += timeUsed;
-                    if (state.mode === 'increment') state.blackTime += state.increment * 10;
-                    else if (state.mode === 'bronstein') {
+                    if (state.mode === 'increment') {
+                        state.blackTime += state.increment * 10;
+                    } else if (state.mode === 'bronstein') {
                         const incDec = state.increment * 10;
                         state.blackTime += Math.min(incDec, timeUsed);
                     } else if (state.mode === 'movetimer') {
@@ -2327,11 +1736,9 @@
                 saveGame();
             }
 
-            // ---------- Cambio de modo ----------
+            // ---------- Cambio de modo (solo UI) ----------
             function onModeChange(reset = true) {
                 const mode = modeSelect.value;
-                state.mode = mode;
-
                 const showBase = (mode !== 'movetimer');
                 const showIncrement = (mode === 'increment' || mode === 'bronstein' || mode === 'delay');
                 const showMoveTime = (mode === 'movetimer');
@@ -2344,7 +1751,6 @@
 
                 incrementInput.disabled = !showIncrement;
                 moveTimeInput.disabled = !showMoveTime;
-                baseTimeInput.disabled = !showBase;
                 byoyomiPeriodsInput.disabled = !showByoyomi;
                 byoyomiTimeInput.disabled = !showByoyomi;
 
@@ -2352,15 +1758,15 @@
                 if (mode === 'delay') label.textContent = 'Retraso (seg)';
                 else label.textContent = 'Incremento (seg)';
 
+                // En modo estándar, ocultar y deshabilitar incremento
                 if (mode === 'standard') {
                     incrementGroup.style.display = 'none';
+                    incrementInput.disabled = true;
                 }
 
                 if (reset && state.isRunning) stopTimerLoop();
                 if (reset) resetGame();
-                else { updateDisplay();
-                    updateControls(); }
-                saveSettings();
+                else { updateDisplay(); updateControls(); }
             }
 
             // ---------- Tema ----------
@@ -2402,7 +1808,6 @@
                 if (state.soundEnabled) playBeep(1000, 100, 1);
             }
 
-            // ---------- Auto-start ----------
             function toggleAutoStart() {
                 state.autoStart = autoStartCheck.checked;
                 updateAutoIcon();
@@ -2410,18 +1815,63 @@
                 announce(state.autoStart ? 'Auto‑start activado 🔓' : 'Auto‑start desactivado 🔒');
             }
 
-            // ---------- Panel configuración ----------
-            function togglePanel(open) {
-                if (open === undefined) {
-                    panel.classList.toggle('open');
-                } else if (open) {
-                    panel.classList.add('open');
+            // ---------- Panel de configuración ----------
+            function openPanel() {
+                // Cargar la configuración actual en el panel (copia de trabajo)
+                panelState.mode = state.mode;
+                panelState.baseTime = state.baseTime;
+                panelState.increment = state.increment;
+                panelState.moveTime = state.moveTime;
+                panelState.adjustStep = state.adjustStep;
+                panelState.byoyomiPeriods = state.byoyomiPeriods;
+                panelState.byoyomiTime = state.byoyomiTime;
+                panelState.autoPause = state.autoPause;
+                panelState.showStats = state.showStats;
+
+                // Sincronizar inputs del panel con panelState
+                modeSelect.value = panelState.mode;
+                setTimeInputsFromSeconds(panelState.baseTime);
+                incrementInput.value = panelState.increment;
+                moveTimeInput.value = panelState.moveTime;
+                adjustStepSelect.value = panelState.adjustStep / 10;
+                byoyomiPeriodsInput.value = panelState.byoyomiPeriods;
+                byoyomiTimeInput.value = panelState.byoyomiTime;
+                autoPauseCheck.checked = panelState.autoPause;
+                showStatsCheck.checked = panelState.showStats;
+
+                onModeChange(false);
+                panel.classList.add('open');
+            }
+
+            function closePanel(save = false) {
+                if (save) {
+                    // Aplicar cambios al estado principal
+                    state.mode = panelState.mode;
+                    state.baseTime = panelState.baseTime;
+                    state.increment = panelState.increment;
+                    state.moveTime = panelState.moveTime;
+                    state.adjustStep = panelState.adjustStep;
+                    state.byoyomiPeriods = panelState.byoyomiPeriods;
+                    state.byoyomiTime = panelState.byoyomiTime;
+                    state.autoPause = panelState.autoPause;
+                    state.showStats = panelState.showStats;
+
+                    // Asegurar que en modo estándar el incremento sea 0 (no se usa)
+                    if (state.mode === 'standard') {
+                        state.increment = 0;
+                    }
+
+                    // Si el modo cambió, resetear el juego para aplicar nueva configuración
+                    if (state.isRunning) resetGame();
+                    else resetGame(); // forzar reset para que coja los nuevos valores
+
+                    saveSettings();
+                    announce('Configuración aplicada y guardada.');
                 } else {
-                    panel.classList.remove('open');
+                    announce('Cambios descartados.');
                 }
-                if (!panel.classList.contains('open')) {
-                    modalInline.classList.remove('active');
-                }
+                panel.classList.remove('open');
+                modalInline.classList.remove('active');
             }
 
             // ---------- Presets ----------
@@ -2467,8 +1917,8 @@
                     if (modalInline.classList.contains('active')) {
                         presetName.value = '';
                         presetMode.value = modeSelect.value;
-                        presetBase.value = baseTimeInput.value;
-                        presetInc.value = (modeSelect.value === 'movetimer') ? moveTimeInput.value : incrementInput.value;
+                        presetBase.value = state.baseTime;
+                        presetInc.value = state.increment;
                         presetName.focus();
                     }
                 });
@@ -2477,20 +1927,28 @@
 
             function applyPreset(btn) {
                 const mode = btn.dataset.mode;
-                const base = parseFloat(btn.dataset.base);
+                const base = parseInt(btn.dataset.base) || 300;
                 const inc = parseInt(btn.dataset.inc) || 0;
-                modeSelect.value = mode;
-                baseTimeInput.value = base;
-                if (mode === 'increment' || mode === 'bronstein' || mode === 'delay') incrementInput.value = inc;
-                else if (mode === 'movetimer') moveTimeInput.value = inc > 0 ? inc : 30;
-                else if (mode === 'byoyomi') {
-                    byoyomiPeriodsInput.value = 3;
-                    byoyomiTimeInput.value = inc > 0 ? inc : 30;
+
+                panelState.mode = mode;
+                panelState.baseTime = base;
+                panelState.increment = inc;
+                if (mode === 'movetimer') panelState.moveTime = inc > 0 ? inc : 30;
+                else panelState.moveTime = 30;
+                if (mode === 'byoyomi') {
+                    panelState.byoyomiPeriods = 3;
+                    panelState.byoyomiTime = inc > 0 ? inc : 30;
                 }
-                onModeChange(true);
-                announce(`Preset: ${btn.textContent.replace('×','').trim()}`);
+
+                modeSelect.value = mode;
+                setTimeInputsFromSeconds(base);
+                incrementInput.value = inc;
+                moveTimeInput.value = panelState.moveTime;
+                byoyomiPeriodsInput.value = panelState.byoyomiPeriods;
+                byoyomiTimeInput.value = panelState.byoyomiTime;
+                onModeChange(false);
+                announce(`Preset cargado: ${btn.textContent.replace('×','').trim()}`);
                 vibrate(30);
-                togglePanel(false);
             }
 
             function deleteCustomPreset(id) {
@@ -2565,9 +2023,9 @@
                     togglePause(); }
                 if (e.key === 'r' || e.key === 'R') { e.preventDefault();
                     resetGame(); }
-                if (e.key === 'c' || e.key === 'C') { e.preventDefault();
-                    togglePanel(); }
-                if (e.key === 'Escape') { togglePanel(false);
+                if (e.key === 'c' || e.key === 'C') { e.preventDefault(); if (panel.classList.contains('open')) closePanel(
+                        false); else openPanel(); }
+                if (e.key === 'Escape') { if (panel.classList.contains('open')) closePanel(false);
                     closeStatsModal();
                     celebrationOverlay.classList.remove('active');
                     closeManualModal(); }
@@ -2587,21 +2045,106 @@
             function init() {
                 loadSettings();
                 requestNotificationPermission();
-                state.baseTime = parseFloat(baseTimeInput.value) || 300;
-                state.increment = parseInt(incrementInput.value) || 3;
+
+                state.baseTime = getBaseTimeFromInputs();
+                state.increment = parseInt(incrementInput.value) || 0;
                 state.moveTime = parseInt(moveTimeInput.value) || 30;
-                state.mode = modeSelect.value;
+                state.byoyomiPeriods = parseInt(byoyomiPeriodsInput.value) || 3;
+                state.byoyomiTime = parseInt(byoyomiTimeInput.value) || 30;
+                state.adjustStep = parseInt(adjustStepSelect.value) * 10;
+
                 onModeChange(false);
                 renderPresets();
                 updateAutoIcon();
+                updateDisplay();
+                updateControls();
+                updateStats();
+                updateAdjustVisibility();
 
-                state.adjustStep = parseInt(adjustStepSelect.value) * 10;
-                adjustStepSelect.addEventListener('change', function() {
-                    state.adjustStep = parseInt(this.value) * 10;
-                    saveSettings();
-                    announce(`Paso de ajuste: ${this.value} segundos`);
+                // Eventos del panel
+                btnConfig.addEventListener('click', openPanel);
+                panelClose.addEventListener('click', () => closePanel(false));
+                panelCancel.addEventListener('click', () => closePanel(false));
+                panelReady.addEventListener('click', () => closePanel(true));
+
+                // Eventos de inputs (modifican panelState en tiempo real)
+                modeSelect.addEventListener('change', function() {
+                    panelState.mode = this.value;
+                    onModeChange(false);
+                    // Si el modo es estándar, deshabilitar incremento
+                    if (this.value === 'standard') {
+                        incrementInput.disabled = true;
+                        panelState.increment = 0;
+                    } else {
+                        incrementInput.disabled = false;
+                    }
                 });
 
+                baseHours.addEventListener('input', function() { panelState.baseTime = getBaseTimeFromInputs(); });
+                baseMinutes.addEventListener('input', function() { panelState.baseTime = getBaseTimeFromInputs(); });
+                baseSeconds.addEventListener('input', function() { panelState.baseTime = getBaseTimeFromInputs(); });
+
+                incrementInput.addEventListener('input', function() {
+                    panelState.increment = parseInt(this.value) || 0;
+                });
+
+                moveTimeInput.addEventListener('input', function() {
+                    panelState.moveTime = parseInt(this.value) || 30;
+                });
+
+                adjustStepSelect.addEventListener('change', function() {
+                    panelState.adjustStep = parseInt(this.value) * 10;
+                });
+
+                byoyomiPeriodsInput.addEventListener('input', function() {
+                    panelState.byoyomiPeriods = parseInt(this.value) || 3;
+                });
+
+                byoyomiTimeInput.addEventListener('input', function() {
+                    panelState.byoyomiTime = parseInt(this.value) || 30;
+                });
+
+                autoPauseCheck.addEventListener('change', function() {
+                    panelState.autoPause = this.checked;
+                });
+
+                showStatsCheck.addEventListener('change', function() {
+                    panelState.showStats = this.checked;
+                });
+
+                // Otros eventos
+                btnStart.addEventListener('click', startGame);
+                btnPause.addEventListener('click', togglePause);
+                btnReset.addEventListener('click', resetGame);
+                btnThemeMode.addEventListener('click', toggleThemeMode);
+                btnThemeModePanel.addEventListener('click', toggleThemeMode);
+                btnFullscreen.addEventListener('click', toggleFullscreen);
+                btnSound.addEventListener('click', toggleSound);
+                clockWhite.addEventListener('click', () => handleClockClick('white'));
+                clockBlack.addEventListener('click', () => handleClockClick('black'));
+                document.addEventListener('keydown', handleKeydown);
+                titleContainer.addEventListener('click', enableTitleEdit);
+                autoStartCheck.addEventListener('change', toggleAutoStart);
+
+                document.querySelectorAll('.theme-btn').forEach(btn => {
+                    btn.addEventListener('click', () => setTheme(btn.dataset.theme));
+                });
+
+                // Presets
+                modalCancel.addEventListener('click', () => modalInline.classList.remove('active'));
+                modalSave.addEventListener('click', saveCustomPresetFromModal);
+                btnAddPreset.addEventListener('click', () => {
+                    modalInline.classList.toggle('active');
+                    if (modalInline.classList.contains('active')) {
+                        presetName.value = '';
+                        presetMode.value = modeSelect.value;
+                        presetBase.value = state.baseTime;
+                        presetInc.value = state.increment;
+                        presetName.focus();
+                    }
+                });
+
+                // Ajustes manuales
                 adjustBtns.forEach(btn => {
                     btn.addEventListener('click', function(e) {
                         e.stopPropagation();
@@ -2636,54 +2179,6 @@
                     });
                 });
 
-                showStatsCheck.addEventListener('change', function() {
-                    state.showStats = this.checked;
-                    saveSettings();
-                    announce(state.showStats ? 'Estadísticas activadas' : 'Estadísticas desactivadas');
-                });
-
-                modeSelect.addEventListener('change', () => onModeChange(true));
-                baseTimeInput.addEventListener('change', saveSettings);
-                incrementInput.addEventListener('change', saveSettings);
-                moveTimeInput.addEventListener('change', saveSettings);
-                byoyomiPeriodsInput.addEventListener('change', saveSettings);
-                byoyomiTimeInput.addEventListener('change', saveSettings);
-                btnStart.addEventListener('click', startGame);
-                btnPause.addEventListener('click', togglePause);
-                btnReset.addEventListener('click', resetGame);
-                btnThemeMode.addEventListener('click', toggleThemeMode);
-                btnThemeModePanel.addEventListener('click', toggleThemeMode);
-                btnFullscreen.addEventListener('click', toggleFullscreen);
-                btnSound.addEventListener('click', toggleSound);
-                btnConfig.addEventListener('click', () => togglePanel());
-                panelClose.addEventListener('click', () => togglePanel(false));
-                clockWhite.addEventListener('click', () => handleClockClick('white'));
-                clockBlack.addEventListener('click', () => handleClockClick('black'));
-                document.addEventListener('keydown', handleKeydown);
-                titleContainer.addEventListener('click', enableTitleEdit);
-                autoStartCheck.addEventListener('change', toggleAutoStart);
-                autoPauseCheck.addEventListener('change', () => {
-                    state.autoPause = autoPauseCheck.checked;
-                    saveSettings();
-                });
-
-                document.querySelectorAll('.theme-btn').forEach(btn => {
-                    btn.addEventListener('click', () => setTheme(btn.dataset.theme));
-                });
-
-                modalCancel.addEventListener('click', () => modalInline.classList.remove('active'));
-                modalSave.addEventListener('click', saveCustomPresetFromModal);
-                btnAddPreset.addEventListener('click', () => {
-                    modalInline.classList.toggle('active');
-                    if (modalInline.classList.contains('active')) {
-                        presetName.value = '';
-                        presetMode.value = modeSelect.value;
-                        presetBase.value = baseTimeInput.value;
-                        presetInc.value = (modeSelect.value === 'movetimer') ? moveTimeInput.value : incrementInput.value;
-                        presetName.focus();
-                    }
-                });
-
                 celebrationStatsBtn.addEventListener('click', showStatsDetail);
                 statsModalClose.addEventListener('click', closeStatsModal);
                 statsModal.addEventListener('click', (e) => {
@@ -2698,12 +2193,7 @@
                         .catch(err => console.log('Error al registrar SW:', err));
                 }
 
-                updateDisplay();
-                updateControls();
-                updateStats();
-                updateAdjustVisibility();
                 announce('Reloj listo. ⚙️ para ajustes. 🔓 auto‑start.');
-
                 document.addEventListener('click', () => initAudio(), { once: true });
             }
 
