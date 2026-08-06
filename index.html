@@ -8,7 +8,7 @@
     <link rel="manifest" href="/manifest.json">
     <style>
         /* ============================================================
-           CSS (igual que antes, con ajustes menores)
+           CSS optimizado con mejoras visuales para el delay
            ============================================================ */
         * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
         :root {
@@ -19,6 +19,7 @@
             --shadow: 0 8px 32px rgba(0,0,0,0.5); --radius: 20px;
             --progress-bg: rgba(255,255,255,0.1); --glass-blur: blur(12px);
             --success: #22C55E; --warning: #F59E0B; --danger: #EF4444;
+            --delay-color: #FBBF24; /* color para el indicador de delay */
         }
         [data-theme="blue"] { --primary: #4A8CFF; --primary-hover: #3A7CEF; --primary-light: rgba(74,140,255,0.2); --primary-glow: rgba(74,140,255,0.4); }
         [data-theme="green"] { --primary: #22C55E; --primary-hover: #16A34A; --primary-light: rgba(34,197,94,0.2); --primary-glow: rgba(34,197,94,0.4); }
@@ -142,6 +143,22 @@
         }
         .clock .turn-counter {
             font-size:0.65rem; color:var(--text-soft); opacity:0.7; margin-top:1px;
+        }
+        /* Indicador de delay en el contador de turno */
+        .turn-counter .delay-indicator {
+            display:inline-block;
+            background:var(--delay-color);
+            color:#000;
+            font-weight:700;
+            padding:0 6px;
+            border-radius:10px;
+            margin-left:4px;
+            font-size:0.7rem;
+            animation:delay-pulse 0.8s ease-in-out infinite alternate;
+        }
+        @keyframes delay-pulse {
+            0% { opacity:0.6; transform:scale(0.95); }
+            100% { opacity:1; transform:scale(1.05); }
         }
         .time-progress {
             width:100%; height:8px;
@@ -540,10 +557,10 @@
                         <option value="standard">Estándar (Finis)</option>
                         <option value="increment">Incremento (Fischer)</option>
                         <option value="bronstein">Bronstein</option>
-                        <option value="delay">Retraso Simple (US)</option>
+                        <option value="delay">Delay</option>
                         <option value="hourglass">Reloj de Arena</option>
                         <option value="byoyomi">Byoyomi (Shogi)</option>
-                        <option value="movetimer">Tiempo por Mov.</option>
+                        <option value="movetimer">Game timer</option>
                     </select>
                 </div>
 
@@ -558,7 +575,7 @@
                     <span class="help-inline">(horas:min:seg)</span>
                 </div>
 
-                <!-- Incremento -->
+                <!-- Incremento (se muestra según modo) -->
                 <div class="config-group" id="increment-group" style="display:none;">
                     <label for="increment" id="increment-label">Incremento (seg)</label>
                     <input type="number" id="increment" value="3" min="0" step="1" />
@@ -572,7 +589,7 @@
                     <input type="number" id="byoyomiTime" value="30" min="1" step="1" />
                 </div>
 
-                <!-- Tiempo por Movimiento -->
+                <!-- Game timer (antes Tiempo por Mov.) -->
                 <div class="config-group" id="move-time-group" style="display:none;">
                     <label for="moveTime">Segundos por movimiento</label>
                     <input type="number" id="moveTime" value="30" min="1" step="1" />
@@ -622,10 +639,10 @@
                         <option value="standard">Estándar</option>
                         <option value="increment">Incremento</option>
                         <option value="bronstein">Bronstein</option>
-                        <option value="delay">Retraso Simple</option>
+                        <option value="delay">Delay</option>
                         <option value="hourglass">Reloj de Arena</option>
                         <option value="byoyomi">Byoyomi</option>
-                        <option value="movetimer">Tiempo por Mov.</option>
+                        <option value="movetimer">Game timer</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -787,7 +804,7 @@
                 blackMoves: 0,
                 whiteTotalTimeUsed: 0,
                 blackTotalTimeUsed: 0,
-                baseTime: 300, // en segundos
+                baseTime: 300,
                 increment: 3,
                 moveTime: 30,
                 mode: 'standard',
@@ -1155,12 +1172,17 @@
 
                 let turnTextWhite = `Turno ${Math.floor(state.turnElapsed / 10)}s`;
                 let turnTextBlack = `Turno ${Math.floor(state.turnElapsed / 10)}s`;
+
+                // Mostrar delay si está activo
                 if (state.mode === 'delay') {
-                    const dW = state.whiteDelay > 0 ? ` Ret:${(state.whiteDelay/10).toFixed(1)}s` : '';
-                    const dB = state.blackDelay > 0 ? ` Ret:${(state.blackDelay/10).toFixed(1)}s` : '';
-                    turnTextWhite += dW;
-                    turnTextBlack += dB;
+                    if (state.whiteDelay > 0) {
+                        turnTextWhite += ` <span class="delay-indicator">⏱${(state.whiteDelay/10).toFixed(1)}s</span>`;
+                    }
+                    if (state.blackDelay > 0) {
+                        turnTextBlack += ` <span class="delay-indicator">⏱${(state.blackDelay/10).toFixed(1)}s</span>`;
+                    }
                 }
+
                 if (state.mode === 'byoyomi') {
                     if (state.whiteTime <= 0) turnTextWhite += ` ⏳${state.whiteByoyomiLeft}`;
                     if (state.blackTime <= 0) turnTextBlack += ` ⏳${state.blackByoyomiLeft}`;
@@ -1212,9 +1234,15 @@
                 progressWhite.style.background = getProgressColor(pctWhite / 100);
                 progressBlack.style.background = getProgressColor(pctBlack / 100);
 
-                const labels = { standard: 'Estándar', increment: 'Incremento', bronstein: 'Bronstein',
-                    delay: 'Retraso Simple', hourglass: 'Reloj Arena', byoyomi: 'Byoyomi',
-                movetimer: 'Tiempo por Mov.' };
+                const labels = {
+                    standard: 'Estándar',
+                    increment: 'Incremento',
+                    bronstein: 'Bronstein',
+                    delay: 'Delay',
+                    hourglass: 'Reloj Arena',
+                    byoyomi: 'Byoyomi',
+                    movetimer: 'Game timer'
+                };
                 modeBadge.textContent = labels[state.mode] || 'Estándar';
             }
 
@@ -1429,7 +1457,7 @@
                             state.turnElapsed += 1;
                         }
                     } else {
-                        // Estándar, Incremento, Bronstein, Movetimer
+                        // Estándar, Incremento, Bronstein, Game timer
                         if (player === 'white') {
                             state.whiteTime = Math.max(0, state.whiteTime - 1);
                         } else {
@@ -1578,6 +1606,11 @@
                 state.blackByoyomiLeft = byoPeriods;
                 state.whiteByoyomiTimer = 0;
                 state.blackByoyomiTimer = 0;
+
+                // En modo Delay, asignar delay inicial al primer jugador (blancas)
+                if (state.mode === 'delay') {
+                    state.whiteDelay = state.delayTime * 10;
+                }
 
                 soundStart();
                 vibrate(50);
@@ -1758,7 +1791,6 @@
                 if (mode === 'delay') label.textContent = 'Retraso (seg)';
                 else label.textContent = 'Incremento (seg)';
 
-                // En modo estándar, ocultar y deshabilitar incremento
                 if (mode === 'standard') {
                     incrementGroup.style.display = 'none';
                     incrementInput.disabled = true;
@@ -1817,7 +1849,6 @@
 
             // ---------- Panel de configuración ----------
             function openPanel() {
-                // Cargar la configuración actual en el panel (copia de trabajo)
                 panelState.mode = state.mode;
                 panelState.baseTime = state.baseTime;
                 panelState.increment = state.increment;
@@ -1828,7 +1859,6 @@
                 panelState.autoPause = state.autoPause;
                 panelState.showStats = state.showStats;
 
-                // Sincronizar inputs del panel con panelState
                 modeSelect.value = panelState.mode;
                 setTimeInputsFromSeconds(panelState.baseTime);
                 incrementInput.value = panelState.increment;
@@ -1845,7 +1875,6 @@
 
             function closePanel(save = false) {
                 if (save) {
-                    // Aplicar cambios al estado principal
                     state.mode = panelState.mode;
                     state.baseTime = panelState.baseTime;
                     state.increment = panelState.increment;
@@ -1856,15 +1885,13 @@
                     state.autoPause = panelState.autoPause;
                     state.showStats = panelState.showStats;
 
-                    // Asegurar que en modo estándar el incremento sea 0 (no se usa)
+                    // En modo estándar, el incremento no se usa
                     if (state.mode === 'standard') {
                         state.increment = 0;
                     }
 
-                    // Si el modo cambió, resetear el juego para aplicar nueva configuración
                     if (state.isRunning) resetGame();
-                    else resetGame(); // forzar reset para que coja los nuevos valores
-
+                    else resetGame();
                     saveSettings();
                     announce('Configuración aplicada y guardada.');
                 } else {
@@ -1885,7 +1912,8 @@
                     { id: 'fixed-5+3', name: '5+3', mode: 'increment', base: 300, inc: 3 },
                     { id: 'fixed-10', name: '10 min', mode: 'standard', base: 600, inc: 0 },
                     { id: 'fixed-byo-5+3x30', name: 'Byo 5m+3x30s', mode: 'byoyomi', base: 300, inc: 30 },
-                    { id: 'fixed-30s-move', name: '30s (Move)', mode: 'movetimer', base: 30, inc: 0 },
+                    { id: 'fixed-30s-move', name: 'Game timer 30s', mode: 'movetimer', base: 30, inc: 0 },
+                    { id: 'fixed-delay-5+5', name: 'Delay 5m +5s', mode: 'delay', base: 300, inc: 5 },
                 ];
                 const allPresets = [...fixedPresets, ...state.customPresets];
                 allPresets.forEach(preset => {
@@ -1969,7 +1997,7 @@
                 const mode = presetMode.value;
                 const base = parseFloat(presetBase.value) || 300;
                 const inc = parseInt(presetInc.value) || 0;
-                if (mode === 'movetimer' && inc < 1) { alert('Para "Tiempo por Mov." el incremento debe ser >=1.'); return; }
+                if (mode === 'movetimer' && inc < 1) { alert('Para "Game timer" el tiempo por movimiento debe ser >=1.'); return; }
                 const newPreset = { id: 'custom-' + Date.now(), name, mode, base, inc };
                 state.customPresets.push(newPreset);
                 saveCustomPresets();
@@ -2067,11 +2095,10 @@
                 panelCancel.addEventListener('click', () => closePanel(false));
                 panelReady.addEventListener('click', () => closePanel(true));
 
-                // Eventos de inputs (modifican panelState en tiempo real)
+                // Eventos de inputs
                 modeSelect.addEventListener('change', function() {
                     panelState.mode = this.value;
                     onModeChange(false);
-                    // Si el modo es estándar, deshabilitar incremento
                     if (this.value === 'standard') {
                         incrementInput.disabled = true;
                         panelState.increment = 0;
