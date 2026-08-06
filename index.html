@@ -676,7 +676,7 @@
             color: var(--text);
             outline: none;
             transition: all 0.2s;
-            width: 60px;
+            width: 80px;
             font-size: 0.8rem;
         }
         .config-panel .config-group select {
@@ -691,7 +691,7 @@
             display: none;
         }
         .config-panel .config-group#byoyomi-group input {
-            width: 50px;
+            width: 60px;
         }
         .config-panel .theme-selector {
             display: flex;
@@ -1043,6 +1043,21 @@
             clip: rect(0, 0, 0, 0);
             border: 0;
         }
+        .help-text {
+            font-size: 0.65rem;
+            color: var(--text-soft);
+            opacity: 0.7;
+            margin-top: 4px;
+        }
+        .help-text i {
+            font-style: normal;
+        }
+        .config-group .help-inline {
+            font-size: 0.6rem;
+            color: var(--text-soft);
+            opacity: 0.6;
+            margin-left: 4px;
+        }
     </style>
 </head>
 <body>
@@ -1058,7 +1073,7 @@
             <div class="header-actions">
                 <span class="badge-mode" id="mode-badge">Estándar</span>
                 <label class="auto-label" id="auto-label" title="Auto‑start: al tocar un reloj se inicia la partida">
-                    <input type="checkbox" id="auto-start" />
+                    <input type="checkbox" id="auto-start" checked />
                     <span class="icon">🔓</span>
                 </label>
                 <button id="btn-sound" aria-label="Sonido" title="Sonido">🔊</button>
@@ -1138,6 +1153,7 @@
             </div>
 
             <div class="presets" id="presets-container"></div>
+            <p class="help-text">💡 Los cambios se aplican al instante. Guarda un preset solo si quieres reutilizar esta configuración más tarde.</p>
 
             <div class="config">
                 <div class="config-group">
@@ -1153,8 +1169,9 @@
                     </select>
                 </div>
                 <div class="config-group" id="base-time-group">
-                    <label for="baseTime">Tiempo base (min)</label>
-                    <input type="number" id="baseTime" value="5" min="0.5" step="0.5" />
+                    <label for="baseTime">Tiempo base <span class="help-inline">(segundos)</span></label>
+                    <input type="number" id="baseTime" value="300" min="1" step="1" />
+                    <span class="help-inline">ej. 300 = 5 min</span>
                 </div>
                 <div class="config-group" id="increment-group" style="display:none;">
                     <label for="increment" id="increment-label">Incremento (seg)</label>
@@ -1171,13 +1188,13 @@
                     <input type="number" id="moveTime" value="30" min="1" step="1" />
                 </div>
                 <div class="config-group">
-                    <label for="adjustStep">Paso ajuste</label>
+                    <label for="adjustStep">Ajuste manual (+/-) <span class="help-inline">(para los botones ± en pausa)</span></label>
                     <select id="adjustStep">
                         <option value="1">1 segundo</option>
                         <option value="5">5 segundos</option>
                         <option value="10">10 segundos</option>
                         <option value="30" selected>30 segundos</option>
-                        <option value="60">1 minuto</option>
+                        <option value="60">1 minuto (60s)</option>
                     </select>
                 </div>
             </div>
@@ -1187,7 +1204,7 @@
                     <input type="checkbox" id="auto-pause" checked /> Pausar al perder foco
                 </label>
                 <label style="font-size:0.7rem; color:var(--text-soft); display:flex; align-items:center; gap:6px;">
-                    <input type="checkbox" id="show-stats" checked /> Mostrar estadísticas al finalizar
+                    <input type="checkbox" id="show-stats" /> Mostrar estadísticas al finalizar
                 </label>
             </div>
 
@@ -1201,8 +1218,8 @@
 
             <div class="modal-inline" id="modal-inline">
                 <div class="form-group">
-                    <label for="preset-name">Nombre del preset</label>
-                    <input type="text" id="preset-name" placeholder="Ej: Mi partida rápida" />
+                    <label for="preset-name">Nombre del preset (opcional)</label>
+                    <input type="text" id="preset-name" placeholder="Deja en blanco para nombre automático" />
                 </div>
                 <div class="form-group">
                     <label for="preset-mode">Modo</label>
@@ -1217,8 +1234,8 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="preset-base">Tiempo base (min)</label>
-                    <input type="number" id="preset-base" value="5" min="0.5" step="0.5" />
+                    <label for="preset-base">Tiempo base (segundos)</label>
+                    <input type="number" id="preset-base" value="300" min="1" step="1" />
                 </div>
                 <div class="form-group">
                     <label for="preset-inc">Incremento / Retraso / Seg x Período</label>
@@ -1231,7 +1248,7 @@
             </div>
 
             <div class="panel-actions">
-                <button id="btn-add-preset">✚ Guardar preset</button>
+                <button id="btn-add-preset">✚ Guardar como preset (opcional)</button>
             </div>
         </div>
 
@@ -1368,7 +1385,7 @@
                 blackMoves: 0,
                 whiteTotalTimeUsed: 0,
                 blackTotalTimeUsed: 0,
-                baseTime: 5,
+                baseTime: 300, // en SEGUNDOS
                 increment: 3,
                 moveTime: 30,
                 mode: 'standard',
@@ -1387,7 +1404,7 @@
                 turnElapsed: 0,
                 customPresets: [],
                 clockName: '♟️ Club Morphy',
-                autoStart: false,
+                autoStart: true,
                 autoPause: true,
                 theme: 'blue',
                 themeMode: 'dark',
@@ -1396,8 +1413,7 @@
                 timeAccumulator: 0,
                 adjustStep: 300,
                 manualTarget: null,
-                showStats: true,
-                // Nuevas variables para modos adicionales
+                showStats: false,
                 delayTime: 0,
                 whiteDelay: 0,
                 blackDelay: 0,
@@ -1441,6 +1457,10 @@
                             state.autoStart = settings.autoStart;
                             autoStartCheck.checked = state.autoStart;
                             updateAutoIcon();
+                        } else {
+                            state.autoStart = true;
+                            autoStartCheck.checked = true;
+                            updateAutoIcon();
                         }
                         if (settings.autoPause !== undefined) {
                             state.autoPause = settings.autoPause;
@@ -1449,6 +1469,9 @@
                         if (settings.showStats !== undefined) {
                             state.showStats = settings.showStats;
                             showStatsCheck.checked = state.showStats;
+                        } else {
+                            state.showStats = false;
+                            showStatsCheck.checked = false;
                         }
                         if (settings.adjustStep) {
                             adjustStepSelect.value = settings.adjustStep;
@@ -1456,13 +1479,19 @@
                         }
                         if (settings.byoyomiPeriods) byoyomiPeriodsInput.value = settings.byoyomiPeriods;
                         if (settings.byoyomiTime) byoyomiTimeInput.value = settings.byoyomiTime;
+                    } else {
+                        state.autoStart = true;
+                        autoStartCheck.checked = true;
+                        updateAutoIcon();
+                        state.showStats = false;
+                        showStatsCheck.checked = false;
                     }
                     const savedPresets = localStorage.getItem('chessClockCustomPresets');
                     if (savedPresets) {
                         try { state.customPresets = JSON.parse(savedPresets); } catch (_) { state.customPresets = []; }
                     } else {
                         state.customPresets = [
-                            { id: 'default-move', name: '30s (Move)', mode: 'movetimer', base: 0.5, inc: 30 }
+                            { id: 'default-move', name: '30s (Move)', mode: 'movetimer', base: 30, inc: 0 }
                         ];
                         saveCustomPresets();
                     }
@@ -1733,16 +1762,12 @@
                 clockWhite.setAttribute('aria-valuenow', Math.floor(state.whiteTime / 10));
                 clockBlack.setAttribute('aria-valuenow', Math.floor(state.blackTime / 10));
 
-                // Barra de progreso para Reloj de Arena
+                // Progreso: base en segundos
                 let maxDec;
                 if (state.mode === 'movetimer') {
                     maxDec = state.moveTime * 10;
-                } else if (state.mode === 'hourglass') {
-                    // En el modo arena, el máximo es el tiempo total inicial (whiteTime + blackTime)
-                    // pero para la barra usamos el tiempo inicial de cada jugador (baseTime)
-                    maxDec = state.baseTime * 60 * 10; // usamos el baseTime como referencia
                 } else {
-                    maxDec = state.baseTime * 60 * 10;
+                    maxDec = state.baseTime * 10; // baseTime en segundos
                 }
                 const pctWhite = Math.min(100, (state.whiteTime / maxDec) * 100);
                 const pctBlack = Math.min(100, (state.blackTime / maxDec) * 100);
@@ -1868,7 +1893,7 @@
                     'Auto‑start desactivado 🔒 (hay que pulsar Iniciar)';
             }
 
-            // ---------- Timer con acumulador ----------
+            // ---------- Timer ----------
             let lastTimestamp = 0;
 
             function startTimerLoop() {
@@ -1914,21 +1939,21 @@
                     const player = state.activePlayer;
 
                     // ============================================================
-                    // 1. MODO RELOJ DE ARENA (CORREGIDO)
+                    // 1. MODO RELOJ DE ARENA
                     // ============================================================
                     if (state.mode === 'hourglass') {
                         if (player === 'white') {
                             state.whiteTime = Math.max(0, state.whiteTime - 1);
-                            state.blackTime = state.blackTime + 1; // SIN LÍMITE
+                            state.blackTime = state.blackTime + 1;
                             state.turnElapsed += 1;
                         } else {
                             state.blackTime = Math.max(0, state.blackTime - 1);
-                            state.whiteTime = state.whiteTime + 1; // SIN LÍMITE
+                            state.whiteTime = state.whiteTime + 1;
                             state.turnElapsed += 1;
                         }
                     }
                     // ============================================================
-                    // 2. MODO BYOYOMI (CON PITIDOS DE CUENTA ATRÁS)
+                    // 2. BYOYOMI
                     // ============================================================
                     else if (state.mode === 'byoyomi') {
                         const timerKey = player + 'ByoyomiTimer';
@@ -1939,21 +1964,16 @@
                             state[timeKey] = Math.max(0, state[timeKey] - 1);
                             state.turnElapsed += 1;
                         } else {
-                            // Estamos en Byoyomi
                             if (state[timerKey] > 0) {
                                 state[timerKey] -= 1;
                                 state.turnElapsed += 1;
-
-                                // === PITIDOS DE CUENTA ATRÁS (últimos 5 segundos) ===
                                 if (state[timerKey] <= 50 && state[timerKey] > 0 && state[timerKey] % 10 === 0) {
                                     playBeep(1200, 80, 1);
                                 }
                                 if (state[timerKey] === 10) {
                                     playBeep(1500, 200, 1);
                                 }
-
                             } else {
-                                // Se acabó el período actual
                                 if (state[leftKey] > 0) {
                                     state[leftKey] -= 1;
                                     state[timerKey] = state.byoyomiTime * 10;
@@ -1967,7 +1987,7 @@
                         }
                     }
                     // ============================================================
-                    // 3. MODO RETRASO SIMPLE (US DELAY)
+                    // 3. RETRASO SIMPLE
                     // ============================================================
                     else if (state.mode === 'delay') {
                         const delayKey = player + 'Delay';
@@ -1984,7 +2004,7 @@
                         }
                     }
                     // ============================================================
-                    // 4. MODOS ESTÁNDAR / INCREMENTO / BRONSTEIN / MOVETIMER
+                    // 4. MODOS ESTÁNDAR, INCREMENTO, BRONSTEIN, MOVETIMER
                     // ============================================================
                     else {
                         if (player === 'white') {
@@ -1995,13 +2015,11 @@
                         state.turnElapsed += 1;
                     }
 
-                    // Verificar si alguien perdió por tiempo
                     if (state.whiteTime <= 0 || state.blackTime <= 0) {
                         endGame(state.whiteTime <= 0 ? 'white' : 'black');
                         return;
                     }
 
-                    // Alerta de 10 segundos
                     const remaining = (player === 'white') ? state.whiteTime : state.blackTime;
                     if (remaining === 100) {
                         soundWarning();
@@ -2014,7 +2032,6 @@
 
                 updateDisplay();
                 updateStats();
-
                 state.animFrameId = requestAnimationFrame(tickLoop);
             }
 
@@ -2044,12 +2061,11 @@
                 if (state.showStats) {
                     showCelebration(winnerName);
                 } else {
-                    setTimeout(() => { resetGame(); }, 400);
+                    setTimeout(() => { resetGame(); }, 600);
                 }
                 updateAdjustVisibility();
             }
 
-            // ---------- Celebración ----------
             function showCelebration(winnerName) {
                 winnerNameSpan.textContent = `¡${winnerName} ganan!`;
                 celebrationOverlay.classList.add('active');
@@ -2116,8 +2132,8 @@
                         state.moveTime = 30; } else state.moveTime = move;
                     state.baseTime = 5;
                 } else {
-                    if (isNaN(base) || base <= 0) { baseTimeInput.value = 5;
-                        state.baseTime = 5; } else state.baseTime = base;
+                    if (isNaN(base) || base < 1) { baseTimeInput.value = 300;
+                        state.baseTime = 300; } else state.baseTime = base;
                     if (state.mode === 'increment' || state.mode === 'bronstein' || state.mode === 'delay') {
                         state.increment = inc >= 0 ? inc : 0;
                     }
@@ -2130,7 +2146,7 @@
                 if (state.mode === 'movetimer') {
                     initial = state.moveTime * 10;
                 } else {
-                    initial = state.baseTime * 60 * 10;
+                    initial = state.baseTime * 10; // baseTime en segundos
                 }
                 state.whiteTime = initial;
                 state.blackTime = initial;
@@ -2210,6 +2226,7 @@
                 state.timeAccumulator = 0;
                 state.whiteDelay = 0;
                 state.blackDelay = 0;
+                state.maxTime = 0;
                 state.whiteByoyomiLeft = 0;
                 state.blackByoyomiLeft = 0;
                 state.whiteByoyomiTimer = 0;
@@ -2219,7 +2236,7 @@
                 if (state.mode === 'movetimer') {
                     initial = (parseInt(moveTimeInput.value) || 30) * 10;
                 } else {
-                    initial = (parseFloat(baseTimeInput.value) || 5) * 60 * 10;
+                    initial = (parseFloat(baseTimeInput.value) || 300) * 10;
                 }
                 state.whiteTime = initial;
                 state.blackTime = initial;
@@ -2335,7 +2352,7 @@
                 if (mode === 'delay') label.textContent = 'Retraso (seg)';
                 else label.textContent = 'Incremento (seg)';
 
-                if (mode === 'hourglass' || mode === 'byoyomi') {
+                if (mode === 'standard') {
                     incrementGroup.style.display = 'none';
                 }
 
@@ -2411,13 +2428,14 @@
             function renderPresets() {
                 presetsContainer.innerHTML = '';
                 const fixedPresets = [
-                    { id: 'fixed-1', name: '1 min', mode: 'standard', base: 1, inc: 0 },
-                    { id: 'fixed-3', name: '3 min', mode: 'standard', base: 3, inc: 0 },
-                    { id: 'fixed-3+2', name: '3+2', mode: 'increment', base: 3, inc: 2 },
-                    { id: 'fixed-5', name: '5 min', mode: 'standard', base: 5, inc: 0 },
-                    { id: 'fixed-5+3', name: '5+3', mode: 'increment', base: 5, inc: 3 },
-                    { id: 'fixed-10', name: '10 min', mode: 'standard', base: 10, inc: 0 },
-                    { id: 'fixed-byo-5+3x30', name: 'Byo 5m+3x30s', mode: 'byoyomi', base: 5, inc: 30 },
+                    { id: 'fixed-1', name: '1 min', mode: 'standard', base: 60, inc: 0 },
+                    { id: 'fixed-3', name: '3 min', mode: 'standard', base: 180, inc: 0 },
+                    { id: 'fixed-3+2', name: '3+2', mode: 'increment', base: 180, inc: 2 },
+                    { id: 'fixed-5', name: '5 min', mode: 'standard', base: 300, inc: 0 },
+                    { id: 'fixed-5+3', name: '5+3', mode: 'increment', base: 300, inc: 3 },
+                    { id: 'fixed-10', name: '10 min', mode: 'standard', base: 600, inc: 0 },
+                    { id: 'fixed-byo-5+3x30', name: 'Byo 5m+3x30s', mode: 'byoyomi', base: 300, inc: 30 },
+                    { id: 'fixed-30s-move', name: '30s (Move)', mode: 'movetimer', base: 30, inc: 0 },
                 ];
                 const allPresets = [...fixedPresets, ...state.customPresets];
                 allPresets.forEach(preset => {
@@ -2443,15 +2461,14 @@
                 const addBtn = document.createElement('button');
                 addBtn.className = 'add-preset';
                 addBtn.textContent = '✚';
-                addBtn.title = 'Guardar preset';
+                addBtn.title = 'Guardar como preset (opcional)';
                 addBtn.addEventListener('click', () => {
                     modalInline.classList.toggle('active');
                     if (modalInline.classList.contains('active')) {
                         presetName.value = '';
                         presetMode.value = modeSelect.value;
                         presetBase.value = baseTimeInput.value;
-                        presetInc.value = (modeSelect.value === 'movetimer') ? moveTimeInput.value : incrementInput
-                        .value;
+                        presetInc.value = (modeSelect.value === 'movetimer') ? moveTimeInput.value : incrementInput.value;
                         presetName.focus();
                     }
                 });
@@ -2483,10 +2500,16 @@
             }
 
             function saveCustomPresetFromModal() {
-                const name = presetName.value.trim();
-                if (!name) { alert('Ingresa un nombre.'); return; }
+                let name = presetName.value.trim();
+                if (!name) {
+                    const modeLabel = presetMode.options[presetMode.selectedIndex].text;
+                    const base = presetBase.value;
+                    const inc = presetInc.value;
+                    name = `${modeLabel} ${base}s`;
+                    if (inc > 0) name += ` +${inc}s`;
+                }
                 const mode = presetMode.value;
-                const base = parseFloat(presetBase.value) || 5;
+                const base = parseFloat(presetBase.value) || 300;
                 const inc = parseInt(presetInc.value) || 0;
                 if (mode === 'movetimer' && inc < 1) { alert('Para "Tiempo por Mov." el incremento debe ser >=1.'); return; }
                 const newPreset = { id: 'custom-' + Date.now(), name, mode, base, inc };
@@ -2564,7 +2587,7 @@
             function init() {
                 loadSettings();
                 requestNotificationPermission();
-                state.baseTime = parseFloat(baseTimeInput.value) || 5;
+                state.baseTime = parseFloat(baseTimeInput.value) || 300;
                 state.increment = parseInt(incrementInput.value) || 3;
                 state.moveTime = parseInt(moveTimeInput.value) || 30;
                 state.mode = modeSelect.value;
@@ -2656,8 +2679,7 @@
                         presetName.value = '';
                         presetMode.value = modeSelect.value;
                         presetBase.value = baseTimeInput.value;
-                        presetInc.value = (modeSelect.value === 'movetimer') ? moveTimeInput.value : incrementInput
-                        .value;
+                        presetInc.value = (modeSelect.value === 'movetimer') ? moveTimeInput.value : incrementInput.value;
                         presetName.focus();
                     }
                 });
